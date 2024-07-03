@@ -14,7 +14,7 @@ declare type RegisterCredentials = {
 };
 
 declare type LoginErrors = {
-    notFound?: string | null;
+    general?: string | null;
     username?: string | null;
     email?: string | null;
     password?: string | null;
