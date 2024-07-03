@@ -6,12 +6,11 @@ declare type LoginCredentials = {
     password: string;
 };
 
-declare type SignupCredentials = {
+declare type RegisterCredentials = {
     email: string;
     password: string;
     username: string;
     confirmPassword: string;
-    dateOfBirth: Nullable<Date>;
 };
 
 declare type LoginErrors = {
@@ -21,7 +20,7 @@ declare type LoginErrors = {
     password?: string | null;
 };
 
-declare type SignupErrors = {
+declare type RegisteErrors = {
     email?: string | null;
     password?: string | null;
     username?: string | null;

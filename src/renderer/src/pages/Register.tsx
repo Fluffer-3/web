@@ -2,17 +2,16 @@ import { useEffect, useState } from "react";
 import { useAuth } from "../hooks";
 import { useNavigate } from "react-router-dom";
 import { useMutation } from "@apollo/client";
-import { SignupUser } from "../gql/auth";
+import { RegisterUser } from "../gql/auth";
 
 import { FloatLabel } from "primereact/floatlabel";
 import { InputText } from "primereact/inputtext";
 import { Password } from "primereact/password";
 import { Divider } from "primereact/divider";
 import { Button } from "primereact/button";
-import { SignupCredentials, SignupErrors } from "@renderer/@types";
-import { Calendar } from "primereact/calendar";
+import { RegisterCredentials, RegisteErrors } from "@renderer/@types";
 
-const SignUpPage = () => {
+const RegisterPage = () => {
     const navigate = useNavigate();
 
     const { isLoggedIn } = useAuth();
@@ -21,25 +20,23 @@ const SignUpPage = () => {
         if (isLoggedIn) navigate("/");
     }, [isLoggedIn]);
 
-    const [creds, setCreds] = useState<SignupCredentials>({
+    const [creds, setCreds] = useState<RegisterCredentials>({
         email: "",
         username: "",
         password: "",
-        confirmPassword: "",
-        dateOfBirth: null
+        confirmPassword: ""
     });
 
-    const [errors, setErrors] = useState<SignupErrors>({
+    const [errors, setErrors] = useState<RegisteErrors>({
         email: null,
         username: null,
         password: null,
-        confirmPassword: null,
-        dateOfBirth: null
+        confirmPassword: null
     });
 
     const [successful, setSuccessful] = useState(false);
 
-    const [signupUser] = useMutation(SignupUser, {
+    const [signupUser] = useMutation(RegisterUser, {
         update: () => {
             setErrors({
                 email: null,
@@ -52,56 +49,13 @@ const SignUpPage = () => {
         },
         onError: (error) => {
             // TODO: Come up with a better way to handle errors.
-            const message = error.message.toLowerCase();
-            if (message.includes("email")) {
-                setErrors({
-                    email: error.message,
-                    username: null,
-                    password: null,
-                    confirmPassword: null,
-                    dateOfBirth: null
-                });
-            }
-
-            if (message.includes("username")) {
-                setErrors({
-                    email: null,
-                    username: error.message,
-                    password: null,
-                    confirmPassword: null,
-                    dateOfBirth: null
-                });
-            }
-
-            if (message.includes("password")) {
-                setErrors({
-                    email: null,
-                    username: null,
-                    password: error.message,
-                    confirmPassword: null,
-                    dateOfBirth: null
-                });
-            }
-
-            if (message.includes("confirm")) {
-                setErrors({
-                    email: null,
-                    username: null,
-                    password: null,
-                    confirmPassword: error.message,
-                    dateOfBirth: null
-                });
-            }
-
-            if (message.includes("date of birth") || message.includes("13")) {
-                setErrors({
-                    email: null,
-                    username: null,
-                    password: null,
-                    confirmPassword: null,
-                    dateOfBirth: error.message
-                });
-            }
+            const errs = error.graphQLErrors[0].extensions.errors as any[];
+            errs.forEach((err) => {
+                setErrors((prev) => ({
+                    ...prev,
+                    [err.type]: err.message
+                }));
+            });
         },
         variables: creds
     });
@@ -153,13 +107,17 @@ const SignUpPage = () => {
                                     id="email"
                                     name="email"
                                     onChange={onChange}
+                                    placeholder="Enter your email"
                                     value={creds.email}
+                                    invalid={!!errors.email}
                                 />
                                 <label htmlFor="email">Email</label>
                             </FloatLabel>
-                            <span className="text-red-500 text-sm">
-                                {errors.email}
-                            </span>
+                            {errors.email && (
+                                <span className="text-red-500 text-sm">
+                                    {errors.email}
+                                </span>
+                            )}
                         </div>
                         <div className="form-field">
                             <FloatLabel>
@@ -168,12 +126,15 @@ const SignUpPage = () => {
                                     name="username"
                                     onChange={onChange}
                                     value={creds.username}
+                                    invalid={!!errors.username}
                                 />
                                 <label htmlFor="username">Username</label>
                             </FloatLabel>
-                            <span className="text-red-500 text-sm">
-                                {errors.username}
-                            </span>
+                            {errors.username && (
+                                <span className="text-red-500 text-sm">
+                                    {errors.username}
+                                </span>
+                            )}
                         </div>
                         <div className="form-field">
                             <FloatLabel>
@@ -185,8 +146,7 @@ const SignUpPage = () => {
                                     value={creds.password}
                                     header={passwordHeader}
                                     footer={passwordFooter}
-                                    toggleMask
-                                    size={18}
+                                    invalid={!!errors.password}
                                 />
                                 <label htmlFor="password">Password</label>
                             </FloatLabel>
@@ -204,10 +164,8 @@ const SignUpPage = () => {
                                     type="confirmPassword"
                                     onChange={onChange}
                                     value={creds.confirmPassword}
-                                    toggleMask
                                     feedback={false}
-                                    variant="outlined"
-                                    size={18}
+                                    invalid={!!errors.confirmPassword}
                                 />
                                 <label htmlFor="confirmPassword">
                                     Confirm Password
@@ -216,35 +174,6 @@ const SignUpPage = () => {
                             {errors.confirmPassword && (
                                 <span className="text-red-500 text-sm">
                                     {errors.confirmPassword}
-                                </span>
-                            )}
-                        </div>
-                        <div className="form-field">
-                            <FloatLabel>
-                                <Calendar
-                                    inputId="dateOfBirth"
-                                    value={creds.dateOfBirth}
-                                    onChange={(e) =>
-                                        setCreds({
-                                            ...creds,
-                                            dateOfBirth: e.value
-                                        })
-                                    }
-                                    maxDate={
-                                        new Date(
-                                            new Date().setFullYear(
-                                                new Date().getFullYear() - 13
-                                            )
-                                        )
-                                    }
-                                />
-                                <label htmlFor="dateOfBirth">
-                                    Date of Birth
-                                </label>
-                            </FloatLabel>
-                            {errors.dateOfBirth && (
-                                <span className="text-red-500 text-sm">
-                                    {errors.dateOfBirth}
                                 </span>
                             )}
                         </div>
@@ -283,4 +212,4 @@ const SignUpPage = () => {
     );
 };
 
-export default SignUpPage;
+export default RegisterPage;

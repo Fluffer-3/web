@@ -20,21 +20,19 @@ export const LoginUser = gql`
     }
 `;
 
-export const SignupUser = gql`
-    mutation signupUser(
+export const RegisterUser = gql`
+    mutation registerUser(
         $username: String!
         $email: String!
         $password: String!
         $confirmPassword: String!
-        $dateOfBirth: String!
     ) {
-        signupUser(
+        registerUser(
             input: {
                 username: $username
                 email: $email
                 password: $password
                 confirmPassword: $confirmPassword
-                dateOfBirth: $dateOfBirth
             }
         )
     }
