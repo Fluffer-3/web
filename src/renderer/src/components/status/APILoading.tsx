@@ -14,10 +14,9 @@ const APILoading = () => {
                 />
             </div>
             <div className="text-center font-bold text-2xl mt-5">Fluffer</div>
-            <div className="text-center text-xl mt-5">☺️ Loading... ☺️</div>
+            <div className="text-center text-xl mt-5">😃 Loading... 😃</div>
         </div>
     );
 };
 
 export default APILoading;
-2;

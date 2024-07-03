@@ -43,8 +43,6 @@ const LoginPage = () => {
             setCreds({ usernameOrEmail: "", password: "" });
 
             login(userData);
-
-            navigate("/servers");
         },
         onError: (error) => {
             // TODO: Come up with a better way to handle errors.
@@ -88,11 +86,11 @@ const LoginPage = () => {
         variables: creds
     });
 
+    if (isLoggedIn) return <></>;
+
     const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setCreds({ ...creds, [e.target.name]: e.target.value });
     };
-
-    if (isLoggedIn) return <></>;
 
     return (
         <div
@@ -102,41 +100,54 @@ const LoginPage = () => {
             }}
         >
             <div className="inline-flex flex-col m-auto p-10 justify-center items-center gap-10 m-auto shadow-2xl rounded-lg bg-neutral-700/[.05]">
-                <div className="header p-2">
+                <div>
                     <span className="text-lg">Login to&nbsp;</span>
                     <span className="text-lg font-bold">Fluffer</span>
                 </div>
-                <div className="flex flex-col gap-4 items-center justify-center">
-                    <FloatLabel>
-                        <InputText
-                            id="usernameOrEmail"
-                            name="usernameOrEmail"
-                            onChange={onChange}
-                            value={creds.usernameOrEmail}
-                        />
-                        <label htmlFor="usernameOrEmail">Username/Email</label>
-                    </FloatLabel>
+                {errors.notFound && (
                     <span className="text-red-500 text-sm">
-                        {errors.username || errors.email || errors.notFound}
+                        {errors.notFound}
                     </span>
-                    <FloatLabel>
-                        <Password
-                            id="password"
-                            name="password"
-                            type="password"
-                            onChange={onChange}
-                            value={creds.password}
-                            toggleMask
-                            feedback={false}
-                            size={18}
-                        />
-                        <label htmlFor="password">Password</label>
-                    </FloatLabel>
-                    {errors.password && (
-                        <span className="text-red-500 text-sm">
-                            {errors.password}
-                        </span>
-                    )}
+                )}
+                <div className="flex flex-col gap-4 items-center justify-center">
+                    <div className="flex gap-2 items-center justify-center">
+                        <FloatLabel>
+                            <InputText
+                                id="usernameOrEmail"
+                                name="usernameOrEmail"
+                                onChange={onChange}
+                                value={creds.usernameOrEmail}
+                                invalid={!!errors.username || !!errors.email}
+                            />
+                            <label htmlFor="usernameOrEmail">
+                                Username/Email
+                            </label>
+                        </FloatLabel>
+                        {(errors.username || errors.email) && (
+                            <span className="text-red-500 text-sm">
+                                {errors.username || errors.email}
+                            </span>
+                        )}
+                    </div>
+                    <div className="flex gap-2 items-center justify-center">
+                        <FloatLabel>
+                            <Password
+                                id="password"
+                                name="password"
+                                type="password"
+                                onChange={onChange}
+                                value={creds.password}
+                                feedback={false}
+                                invalid={!!errors.password}
+                            />
+                            <label htmlFor="password">Password</label>
+                        </FloatLabel>
+                        {errors.password && (
+                            <span className="text-red-500 text-sm">
+                                {errors.password}
+                            </span>
+                        )}
+                    </div>
                 </div>
                 <div className="footer">
                     <Button

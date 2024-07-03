@@ -16,6 +16,7 @@ export function AppModeProvider({ children }: PropsWithChildren) {
     const [appMode, setAppMode] = useState<"servers" | "posts">("servers");
 
     useEffect(() => {
+        if (!isLoggedIn && location.pathname === "/") navigate("/login");
         if (
             !isLoggedIn &&
             (location.pathname.includes("servers") ||

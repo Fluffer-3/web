@@ -93,7 +93,7 @@ const SignUpPage = () => {
                 });
             }
 
-            if (message.includes("date") || message.includes("13")) {
+            if (message.includes("date of birth") || message.includes("13")) {
                 setErrors({
                     email: null,
                     username: null,
