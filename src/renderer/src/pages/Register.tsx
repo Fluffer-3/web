@@ -48,7 +48,6 @@ const RegisterPage = () => {
             setSuccessful(true);
         },
         onError: (error) => {
-            // TODO: Come up with a better way to handle errors.
             const errs = error.graphQLErrors[0].extensions.errors as any[];
             errs.forEach((err) => {
                 setErrors((prev) => ({
@@ -101,7 +100,7 @@ const RegisterPage = () => {
                     </span>
                 ) : (
                     <div className="flex flex-col gap-8 items-center justify-center">
-                        <div className="form-field">
+                        <div className="flex flex-col gap-2 items-center justify-center">
                             <FloatLabel>
                                 <InputText
                                     id="email"
@@ -114,12 +113,12 @@ const RegisterPage = () => {
                                 <label htmlFor="email">Email</label>
                             </FloatLabel>
                             {errors.email && (
-                                <span className="text-red-500 text-sm">
+                                <span className="text-red-500 text-center text-sm">
                                     {errors.email}
                                 </span>
                             )}
                         </div>
-                        <div className="form-field">
+                        <div className="flex flex-col gap-2 items-center justify-center">
                             <FloatLabel>
                                 <InputText
                                     id="username"
@@ -131,12 +130,12 @@ const RegisterPage = () => {
                                 <label htmlFor="username">Username</label>
                             </FloatLabel>
                             {errors.username && (
-                                <span className="text-red-500 text-sm">
+                                <span className="text-red-500 text-center text-sm">
                                     {errors.username}
                                 </span>
                             )}
                         </div>
-                        <div className="form-field">
+                        <div className="flex flex-col gap-2 items-center justify-center">
                             <FloatLabel>
                                 <Password
                                     id="password"
@@ -151,12 +150,12 @@ const RegisterPage = () => {
                                 <label htmlFor="password">Password</label>
                             </FloatLabel>
                             {errors.password && (
-                                <span className="text-red-500 text-sm">
+                                <span className="text-red-500 text-center text-sm">
                                     {errors.password}
                                 </span>
                             )}
                         </div>
-                        <div className="form-field">
+                        <div className="flex flex-col gap-2 items-center justify-center">
                             <FloatLabel>
                                 <Password
                                     id="confirmPassword"
@@ -172,7 +171,7 @@ const RegisterPage = () => {
                                 </label>
                             </FloatLabel>
                             {errors.confirmPassword && (
-                                <span className="text-red-500 text-sm">
+                                <span className="text-red-500 text-center text-sm">
                                     {errors.confirmPassword}
                                 </span>
                             )}

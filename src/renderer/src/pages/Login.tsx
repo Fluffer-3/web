@@ -45,8 +45,8 @@ const LoginPage = () => {
             login(userData);
         },
         onError: (error) => {
-            // TODO: Come up with a better way to handle errors.
             const errs = error.graphQLErrors[0].extensions.errors as any[];
+            console.log(errs);
             errs.forEach((err) => {
                 setErrors((prev) => ({
                     ...prev,
@@ -100,7 +100,7 @@ const LoginPage = () => {
                             </span>
                         )}
                     </div>
-                    <div className="flex gap-2 items-center justify-center">
+                    <div className="flex flex-col gap-2 items-center justify-center">
                         <FloatLabel>
                             <Password
                                 id="password"
