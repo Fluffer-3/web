@@ -25,7 +25,6 @@ const LoginPage = () => {
     });
 
     const [errors, setErrors] = useState<LoginErrors>({
-        general: null,
         username: null,
         email: null,
         password: null
@@ -34,7 +33,6 @@ const LoginPage = () => {
     const [loginUser] = useMutation(LoginUser, {
         update: (_, { data: { loginUser: userData } = {} }) => {
             setErrors({
-                general: null,
                 email: null,
                 password: null,
                 username: null
@@ -75,11 +73,6 @@ const LoginPage = () => {
                     <span className="text-lg">Login to&nbsp;</span>
                     <span className="text-lg font-bold">Fluffer</span>
                 </div>
-                {errors.general && (
-                    <span className="text-red-500 text-sm">
-                        {errors.general}
-                    </span>
-                )}
                 <div className="flex flex-col gap-4 items-center justify-center">
                     <div className="flex flex-col gap-2 items-center justify-center">
                         <FloatLabel>

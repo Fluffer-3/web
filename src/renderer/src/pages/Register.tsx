@@ -38,7 +38,7 @@ const RegisterPage = () => {
 
     const [successful, setSuccessful] = useState(false);
 
-    const [signupUser] = useMutation(RegisterUser, {
+    const [registerUser] = useMutation(RegisterUser, {
         update: () => {
             setErrors({
                 email: "",
@@ -96,7 +96,12 @@ const RegisterPage = () => {
     if (isLoggedIn) return <></>;
 
     return (
-        <div className="flex h-screen justify-center">
+        <div
+            className="flex h-screen justify-center"
+            onKeyDown={(e) => {
+                if (e.key === "Enter") registerUser();
+            }}
+        >
             <div className="inline-flex flex-col m-auto p-10 justify-center items-center gap-10 m-auto shadow-2xl rounded-lg bg-neutral-700/[.05]">
                 <div className="header p-2">
                     {!successful && (
@@ -238,7 +243,7 @@ const RegisterPage = () => {
                         <>
                             <Button
                                 label="Submit"
-                                onClick={() => signupUser()}
+                                onClick={() => registerUser()}
                                 className="w-full"
                                 severity="success"
                             />
