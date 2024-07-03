@@ -24,6 +24,7 @@ export const RegisterUser = gql`
     mutation registerUser(
         $username: String!
         $email: String!
+        $displayName: String
         $password: String!
         $confirmPassword: String!
     ) {
@@ -31,6 +32,7 @@ export const RegisterUser = gql`
             input: {
                 username: $username
                 email: $email
+                displayName: $displayName
                 password: $password
                 confirmPassword: $confirmPassword
             }

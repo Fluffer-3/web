@@ -8,8 +8,9 @@ declare type LoginCredentials = {
 
 declare type RegisterCredentials = {
     email: string;
-    password: string;
     username: string;
+    displayName: string | null;
+    password: string;
     confirmPassword: string;
 };
 
@@ -20,12 +21,12 @@ declare type LoginErrors = {
     password?: string | null;
 };
 
-declare type RegisteErrors = {
+declare type RegisterErrors = {
     email?: string | null;
-    password?: string | null;
     username?: string | null;
+    displayName?: string | null;
+    password?: string | null;
     confirmPassword?: string | null;
-    dateOfBirth?: string | null;
 };
 
 declare type AuthContextType = {

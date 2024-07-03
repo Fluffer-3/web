@@ -9,7 +9,7 @@ import { InputText } from "primereact/inputtext";
 import { Password } from "primereact/password";
 import { Divider } from "primereact/divider";
 import { Button } from "primereact/button";
-import { RegisterCredentials, RegisteErrors } from "@renderer/@types";
+import { RegisterCredentials, RegisterErrors } from "@renderer/@types";
 
 const RegisterPage = () => {
     const navigate = useNavigate();
@@ -23,13 +23,15 @@ const RegisterPage = () => {
     const [creds, setCreds] = useState<RegisterCredentials>({
         email: "",
         username: "",
+        displayName: null,
         password: "",
         confirmPassword: ""
     });
 
-    const [errors, setErrors] = useState<RegisteErrors>({
+    const [errors, setErrors] = useState<RegisterErrors>({
         email: null,
         username: null,
+        displayName: null,
         password: null,
         confirmPassword: null
     });
@@ -39,16 +41,19 @@ const RegisterPage = () => {
     const [signupUser] = useMutation(RegisterUser, {
         update: () => {
             setErrors({
-                email: null,
-                username: null,
-                password: null,
-                confirmPassword: null
+                email: "",
+                username: "",
+                displayName: null,
+                password: "",
+                confirmPassword: ""
             });
 
             setSuccessful(true);
         },
         onError: (error) => {
             const errs = error.graphQLErrors[0].extensions.errors as any[];
+            console.log(error);
+            if (!errs) return;
             errs.forEach((err) => {
                 setErrors((prev) => ({
                     ...prev,
@@ -61,6 +66,13 @@ const RegisterPage = () => {
 
     const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setCreds({ ...creds, [e.target.name]: e.target.value });
+    };
+
+    const onFocus = (e: React.FocusEvent<HTMLInputElement>) => {
+        setErrors((prev) => ({
+            ...prev,
+            [e.target.name]: null
+        }));
     };
 
     const passwordHeader = (
@@ -109,8 +121,12 @@ const RegisterPage = () => {
                                     placeholder="Enter your email"
                                     value={creds.email}
                                     invalid={!!errors.email}
+                                    onFocus={onFocus}
                                 />
-                                <label htmlFor="email">Email</label>
+                                <label htmlFor="email">
+                                    Email{" "}
+                                    <span className="text-red-500">*</span>
+                                </label>
                             </FloatLabel>
                             {errors.email && (
                                 <span className="text-red-500 text-center text-sm">
@@ -126,12 +142,38 @@ const RegisterPage = () => {
                                     onChange={onChange}
                                     value={creds.username}
                                     invalid={!!errors.username}
+                                    placeholder="Enter your username"
+                                    onFocus={onFocus}
                                 />
-                                <label htmlFor="username">Username</label>
+                                <label htmlFor="username">
+                                    Username{" "}
+                                    <span className="text-red-500">*</span>
+                                </label>
                             </FloatLabel>
                             {errors.username && (
                                 <span className="text-red-500 text-center text-sm">
                                     {errors.username}
+                                </span>
+                            )}
+                        </div>
+                        <div className="flex flex-col gap-2 items-center justify-center">
+                            <FloatLabel>
+                                <InputText
+                                    id="displayName"
+                                    name="displayName"
+                                    onChange={onChange}
+                                    value={creds.displayName ?? ""}
+                                    invalid={!!errors.displayName}
+                                    placeholder="Enter your display name"
+                                    onFocus={onFocus}
+                                />
+                                <label htmlFor="displayName">
+                                    Display Name
+                                </label>
+                            </FloatLabel>
+                            {errors.displayName && (
+                                <span className="text-red-500 text-center text-sm">
+                                    {errors.displayName}
                                 </span>
                             )}
                         </div>
@@ -146,8 +188,12 @@ const RegisterPage = () => {
                                     header={passwordHeader}
                                     footer={passwordFooter}
                                     invalid={!!errors.password}
+                                    onFocus={onFocus}
                                 />
-                                <label htmlFor="password">Password</label>
+                                <label htmlFor="password">
+                                    Password{" "}
+                                    <span className="text-red-500">*</span>
+                                </label>
                             </FloatLabel>
                             {errors.password && (
                                 <span className="text-red-500 text-center text-sm">
@@ -165,9 +211,11 @@ const RegisterPage = () => {
                                     value={creds.confirmPassword}
                                     feedback={false}
                                     invalid={!!errors.confirmPassword}
+                                    onFocus={onFocus}
                                 />
                                 <label htmlFor="confirmPassword">
-                                    Confirm Password
+                                    Confirm Password{" "}
+                                    <span className="text-red-500">*</span>
                                 </label>
                             </FloatLabel>
                             {errors.confirmPassword && (
