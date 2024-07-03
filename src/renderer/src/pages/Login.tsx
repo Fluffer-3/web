@@ -48,37 +48,37 @@ const LoginPage = () => {
         },
         onError: (error) => {
             // TODO: Come up with a better way to handle errors.
-            const { message } = error;
-            if (message.toLowerCase().includes("email")) {
+            const message = error.message;
+            if (message.includes("email")) {
                 setErrors({
                     notFound: null,
-                    email: message,
+                    email: error.message,
                     username: null,
                     password: null
                 });
             }
 
-            if (message.toLowerCase().includes("username")) {
+            if (message.includes("username")) {
                 setErrors({
                     notFound: null,
                     email: null,
-                    username: message,
+                    username: error.message,
                     password: null
                 });
             }
 
-            if (message.toLowerCase().includes("password")) {
+            if (message.includes("password")) {
                 setErrors({
                     notFound: null,
                     username: null,
                     email: null,
-                    password: message
+                    password: error.message
                 });
             }
 
-            if (message.toLowerCase().includes("not found")) {
+            if (message.includes("not found")) {
                 setErrors({
-                    notFound: message,
+                    notFound: error.message,
                     email: null,
                     username: null,
                     password: null
