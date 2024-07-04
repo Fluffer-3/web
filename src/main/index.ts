@@ -1,9 +1,9 @@
-import { app, shell, BrowserWindow, ipcMain } from "electron";
+import { app, shell, BrowserWindow } from "electron";
 import { join } from "path";
 import { electronApp, optimizer, is } from "@electron-toolkit/utils";
 import icon from "../../resources/icon.png?asset";
 
-function createWindow(): void {
+function createWindow() {
     // Create the browser window.
     const mainWindow = new BrowserWindow({
         width: 900,
@@ -13,7 +13,9 @@ function createWindow(): void {
         ...(process.platform === "linux" ? { icon } : {}),
         webPreferences: {
             preload: join(__dirname, "../preload/index.js"),
-            sandbox: false
+            sandbox: false,
+            devTools: is.dev,
+            nodeIntegration: true
         },
         maximizable: true
     });
@@ -36,6 +38,12 @@ function createWindow(): void {
     } else {
         mainWindow.loadFile(join(__dirname, "../renderer/index.html"));
     }
+
+    if (is.dev) {
+        mainWindow.webContents.openDevTools();
+    }
+
+    return mainWindow;
 }
 
 // This method will be called when Electron has finished
@@ -53,7 +61,7 @@ app.whenReady().then(() => {
     });
 
     // IPC test
-    ipcMain.on("ping", () => console.log("pong"));
+    //ipcMain.on("ping", () => console.log("pong"));
 
     createWindow();
 
