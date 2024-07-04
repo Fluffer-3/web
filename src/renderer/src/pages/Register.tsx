@@ -103,20 +103,18 @@ const RegisterPage = () => {
             }}
         >
             <div className="inline-flex flex-col m-auto p-10 justify-center items-center gap-10 m-auto shadow-2xl rounded-lg bg-neutral-700/[.05]">
-                <div className="header p-2">
-                    {!successful && (
-                        <>
-                            <span className="text-lg">Signup for&nbsp;</span>
-                            <span className="text-lg font-bold">Fluffer</span>
-                        </>
-                    )}
-                </div>
+                {!successful && (
+                    <div className="header p-2">
+                        <span className="text-lg">Signup for&nbsp;</span>
+                        <span className="text-lg font-bold">Fluffer</span>
+                    </div>
+                )}
                 {successful ? (
                     <span className="text-green-500 text-center">
                         Account created successfully
                     </span>
                 ) : (
-                    <div className="flex flex-col gap-8 items-center justify-center">
+                    <div className="flex flex-col gap-6 items-center justify-center">
                         <div className="flex flex-col gap-2 items-center justify-center">
                             <FloatLabel>
                                 <InputText

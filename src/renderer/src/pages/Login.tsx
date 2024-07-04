@@ -73,7 +73,7 @@ const LoginPage = () => {
                     <span className="text-lg">Login to&nbsp;</span>
                     <span className="text-lg font-bold">Fluffer</span>
                 </div>
-                <div className="flex flex-col gap-4 items-center justify-center">
+                <div className="flex flex-col gap-6 items-center justify-center">
                     <div className="flex flex-col gap-2 items-center justify-center">
                         <FloatLabel>
                             <InputText
@@ -84,7 +84,7 @@ const LoginPage = () => {
                                 invalid={!!errors.username || !!errors.email}
                             />
                             <label htmlFor="usernameOrEmail">
-                                Username/Email
+                                Username or Email
                             </label>
                         </FloatLabel>
                         {(errors.username || errors.email) && (
