@@ -10,7 +10,7 @@ export const LoginUser = gql`
             username
             email
             avatar
-            nickname
+            displayName
             bio
             createdAt
             createdTimestamp

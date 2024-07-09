@@ -1,18 +1,17 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useAuth } from "../hooks";
 import { useNavigate } from "react-router-dom";
 import { useMutation } from "@apollo/client";
 import { RegisterUser } from "../gql/auth";
 
-import { FloatLabel } from "primereact/floatlabel";
-import { InputText } from "primereact/inputtext";
-import { Password } from "primereact/password";
-import { Divider } from "primereact/divider";
-import { Button } from "primereact/button";
-import { RegisterCredentials, RegisterErrors } from "@renderer/@types";
+import { Button, Container, Form, HStack, Input, Text, VStack } from "rsuite";
+import { RegisterSchema } from "../ValidationSchemas";
+
+import Field from "@renderer/components/Field";
 
 const RegisterPage = () => {
     const navigate = useNavigate();
+    const formRef = useRef<any>();
 
     const { isLoggedIn } = useAuth();
 
@@ -20,7 +19,7 @@ const RegisterPage = () => {
         if (isLoggedIn) navigate("/");
     }, [isLoggedIn]);
 
-    const [creds, setCreds] = useState<RegisterCredentials>({
+    const [creds, setCreds] = useState<Record<string, string | null>>({
         email: "",
         username: "",
         displayName: null,
@@ -28,7 +27,7 @@ const RegisterPage = () => {
         confirmPassword: ""
     });
 
-    const [errors, setErrors] = useState<RegisterErrors>({
+    const [errors, setErrors] = useState<Record<string, string | null>>({
         email: null,
         username: null,
         displayName: null,
@@ -52,7 +51,6 @@ const RegisterPage = () => {
         },
         onError: (error) => {
             const errs = error.graphQLErrors[0].extensions.errors as any[];
-            console.log(error);
             if (!errs) return;
             errs.forEach((err) => {
                 setErrors((prev) => ({
@@ -64,201 +62,128 @@ const RegisterPage = () => {
         variables: creds
     });
 
-    const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setCreds({ ...creds, [e.target.name]: e.target.value });
-    };
-
-    const onFocus = (e: React.FocusEvent<HTMLInputElement>) => {
-        setErrors((prev) => ({
-            ...prev,
-            [e.target.name]: null
-        }));
-    };
-
-    const passwordHeader = (
-        <div className="font-bold mb-3">Pick a password</div>
-    );
-
-    const passwordFooter = (
-        <>
-            <Divider />
-            <p className="font-bold mt-2">For a good password, you can use</p>
-            <ul className="pl-2 ml-2 mt-0 line-height-3">
-                <li>At least one uppercase letter</li>
-                <li>At least one lowercase letter</li>
-                <li>At least one number</li>
-                <li>At least one special character</li>
-                <li>Minimum 8 characters</li>
-            </ul>
-        </>
-    );
-
     if (isLoggedIn) return <></>;
 
-    return (
-        <div
-            className="flex h-screen justify-center"
-            onKeyDown={(e) => {
-                if (e.key === "Enter") registerUser();
-            }}
-        >
-            <div className="inline-flex flex-col m-auto p-10 justify-center items-center gap-10 m-auto shadow-2xl rounded-lg bg-neutral-700/[.05]">
-                {!successful && (
-                    <div className="header p-2">
-                        <span className="text-lg">Signup for&nbsp;</span>
-                        <span className="text-lg font-bold">Fluffer</span>
-                    </div>
-                )}
-                {successful ? (
-                    <span className="text-green-500 text-center">
-                        Account created successfully
-                    </span>
-                ) : (
-                    <div className="flex flex-col gap-6 items-center justify-center">
-                        <div className="flex flex-col gap-2 items-center justify-center">
-                            <FloatLabel>
-                                <InputText
-                                    id="email"
-                                    name="email"
-                                    onChange={onChange}
-                                    placeholder="Enter your email"
-                                    value={creds.email}
-                                    invalid={!!errors.email}
-                                    onFocus={onFocus}
-                                />
-                                <label htmlFor="email">
-                                    Email{" "}
-                                    <span className="text-red-500">*</span>
-                                </label>
-                            </FloatLabel>
-                            {errors.email && (
-                                <span className="text-red-500 text-center text-sm">
-                                    {errors.email}
-                                </span>
-                            )}
-                        </div>
-                        <div className="flex flex-col gap-2 items-center justify-center">
-                            <FloatLabel>
-                                <InputText
-                                    id="username"
-                                    name="username"
-                                    onChange={onChange}
-                                    value={creds.username}
-                                    invalid={!!errors.username}
-                                    placeholder="Enter your username"
-                                    onFocus={onFocus}
-                                />
-                                <label htmlFor="username">
-                                    Username{" "}
-                                    <span className="text-red-500">*</span>
-                                </label>
-                            </FloatLabel>
-                            {errors.username && (
-                                <span className="text-red-500 text-center text-sm">
-                                    {errors.username}
-                                </span>
-                            )}
-                        </div>
-                        <div className="flex flex-col gap-2 items-center justify-center">
-                            <FloatLabel>
-                                <InputText
-                                    id="displayName"
-                                    name="displayName"
-                                    onChange={onChange}
-                                    value={creds.displayName ?? ""}
-                                    invalid={!!errors.displayName}
-                                    placeholder="Enter your display name"
-                                    onFocus={onFocus}
-                                />
-                                <label htmlFor="displayName">
-                                    Display Name
-                                </label>
-                            </FloatLabel>
-                            {errors.displayName && (
-                                <span className="text-red-500 text-center text-sm">
-                                    {errors.displayName}
-                                </span>
-                            )}
-                        </div>
-                        <div className="flex flex-col gap-2 items-center justify-center">
-                            <FloatLabel>
-                                <Password
-                                    id="password"
-                                    name="password"
-                                    type="password"
-                                    onChange={onChange}
-                                    value={creds.password}
-                                    header={passwordHeader}
-                                    footer={passwordFooter}
-                                    invalid={!!errors.password}
-                                    onFocus={onFocus}
-                                />
-                                <label htmlFor="password">
-                                    Password{" "}
-                                    <span className="text-red-500">*</span>
-                                </label>
-                            </FloatLabel>
-                            {errors.password && (
-                                <span className="text-red-500 text-center text-sm">
-                                    {errors.password}
-                                </span>
-                            )}
-                        </div>
-                        <div className="flex flex-col gap-2 items-center justify-center">
-                            <FloatLabel>
-                                <Password
-                                    id="confirmPassword"
-                                    name="confirmPassword"
-                                    type="confirmPassword"
-                                    onChange={onChange}
-                                    value={creds.confirmPassword}
-                                    feedback={false}
-                                    invalid={!!errors.confirmPassword}
-                                    onFocus={onFocus}
-                                />
-                                <label htmlFor="confirmPassword">
-                                    Confirm Password{" "}
-                                    <span className="text-red-500">*</span>
-                                </label>
-                            </FloatLabel>
-                            {errors.confirmPassword && (
-                                <span className="text-red-500 text-center text-sm">
-                                    {errors.confirmPassword}
-                                </span>
-                            )}
-                        </div>
-                    </div>
-                )}
-                <div className="footer">
-                    {successful ? (
+    const onChange = (formValue: Record<string, any>) => {
+        setCreds(formValue);
+    };
+
+    const onsubmit = (e?: React.FormEvent<HTMLFormElement>) => {
+        e?.preventDefault();
+        registerUser();
+    };
+
+    if (successful)
+        return (
+            <VStack
+                className="h-screen"
+                alignItems="center"
+                justifyContent="center"
+            >
+                <VStack
+                    className="p-10 shadow-2xl rounded-lg bg-neutral-700/[.05]"
+                    justifyContent="center"
+                    alignItems="center"
+                    spacing={30}
+                >
+                    <HStack>
+                        <Text size="xxl" color="green">
+                            Account was created successfully
+                        </Text>
+                    </HStack>
+                    <Container>
                         <Button
-                            label="Login"
+                            appearance="primary"
+                            block
+                            size="lg"
+                            color="green"
                             onClick={() => navigate("/login")}
-                            className="w-full"
-                            severity="success"
+                        >
+                            Login
+                        </Button>
+                    </Container>
+                </VStack>
+            </VStack>
+        );
+
+    return (
+        <VStack
+            className="h-screen"
+            alignItems="center"
+            justifyContent="center"
+        >
+            <HStack>
+                <Text size="xxl">Register</Text>
+            </HStack>
+            <VStack
+                className="p-10 shadow-2xl rounded-lg bg-neutral-700/[.05]"
+                alignItems="center"
+                justifyContent="center"
+            >
+                <Container>
+                    <Form
+                        ref={formRef}
+                        onChange={onChange}
+                        onCheck={setErrors}
+                        formValue={creds}
+                        formError={errors}
+                        model={RegisterSchema}
+                        onSubmit={(_, e) => onsubmit(e)}
+                        autoComplete="off"
+                    >
+                        <Field
+                            name="email"
+                            label="Email"
+                            acceptor={Input}
+                            required
                         />
-                    ) : (
-                        <>
-                            <Button
-                                label="Submit"
-                                onClick={() => registerUser()}
-                                className="w-full"
-                                severity="success"
-                            />
-                            <p className="text-sm text-center mt-5">
-                                Already have an account?{" "}
-                                <p
-                                    className="text-blue-400 m-2 cursor-pointer"
-                                    onClick={() => navigate("/login")}
-                                >
-                                    Login
-                                </p>
-                            </p>
-                        </>
-                    )}
-                </div>
-            </div>
-        </div>
+                        <Field
+                            name="username"
+                            label="Username"
+                            acceptor={Input}
+                            required
+                        />
+                        <Field
+                            name="displayName"
+                            label="Display Name"
+                            acceptor={Input}
+                        />
+                        <Field
+                            name="password"
+                            label="Password"
+                            type="password"
+                            acceptor={Input}
+                            required
+                        />
+                        <Field
+                            name="confirmPassword"
+                            label="Confirm Password"
+                            type="password"
+                            acceptor={Input}
+                            required
+                        />
+                        <Button
+                            appearance="primary"
+                            block
+                            size="lg"
+                            color="green"
+                            type="submit"
+                        >
+                            Register
+                        </Button>
+                    </Form>
+                </Container>
+                <Container>
+                    <Button
+                        appearance="link"
+                        onClick={() => navigate("/login")}
+                        size="lg"
+                    >
+                        Already have an account? Login
+                    </Button>
+                </Container>
+            </VStack>
+        </VStack>
     );
 };
 

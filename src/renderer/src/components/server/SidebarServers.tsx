@@ -1,9 +1,8 @@
-import { BiPlus } from "react-icons/bi";
-import SidebarServersButton from "./SidebarServersButton";
-import { Server } from "@renderer/@types";
+import SidebarIcon from "../sidebar/SidebarIcon";
+import SidebarAddServerIcon from "../server/SidebarAddServerIcon";
 
 const SidebarServers = () => {
-    const mockData: Server[] = [
+    const mockData: any[] = [
         {
             id: "1",
             name: "Server 1",
@@ -25,15 +24,12 @@ const SidebarServers = () => {
     ];
 
     return (
-        <div className="flex flex-col items-center flex-grow w-full shadow-2xl bg-neutral-700/[.2] p-5 border-y gap-3 border-green-500">
+        <>
             {mockData.map((server) => (
-                <SidebarServersButton server={server} />
+                <SidebarIcon key={server.id} server={server} />
             ))}
-            <SidebarServersButton
-                icon={<BiPlus size="1.5em" className="text-green-500" />}
-                label="Create a server"
-            />
-        </div>
+            <SidebarAddServerIcon />
+        </>
     );
 };
 

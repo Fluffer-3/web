@@ -20,8 +20,6 @@ import { Provider } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
 import { store, persistor } from "../reducers";
 
-import { PrimeReactProvider } from "primereact/api";
-
 import App from "../App";
 import { AuthProvider } from "./AuthProvider";
 import { AppModeProvider } from "./AppModeProvider";
@@ -51,7 +49,8 @@ const authLink = setContext((_, { headers }) => {
     return {
         headers: {
             ...headers,
-            authorization: token ? `Bearer ${token}` : ""
+            authorization: token ? `Bearer ${token}` : "",
+            "apollo-require-preflight": true
         }
     };
 });
@@ -111,15 +110,13 @@ export default (
     <Provider store={store}>
         <PersistGate loading={null} persistor={persistor}>
             <ApolloProvider client={client}>
-                <PrimeReactProvider>
-                    <Router>
-                        <AuthProvider>
-                            <AppModeProvider>
-                                <App />
-                            </AppModeProvider>
-                        </AuthProvider>
-                    </Router>
-                </PrimeReactProvider>
+                <Router>
+                    <AuthProvider>
+                        <AppModeProvider>
+                            <App />
+                        </AppModeProvider>
+                    </AuthProvider>
+                </Router>
             </ApolloProvider>
         </PersistGate>
     </Provider>

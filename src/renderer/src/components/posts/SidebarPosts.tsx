@@ -1,4 +1,4 @@
-import SidebarPostsButton from "./SidebarPostsButton";
+import SidebarIcon from "../sidebar/SidebarIcon";
 
 const SidebarPosts = () => {
     const mockData: any[] = [
@@ -21,16 +21,15 @@ const SidebarPosts = () => {
         {
             id: "3",
             username: "lolee"
+        },
+        {
+            id: "3",
+            username: "hehehaha",
+            globalName: "Hehe Haha"
         }
     ];
 
-    return (
-        <div className="flex flex-col items-center flex-grow w-full shadow-2xl bg-neutral-700/[.2] p-5 border-y gap-3 border-blue-500">
-            {mockData.map((user) => (
-                <SidebarPostsButton user={user} />
-            ))}
-        </div>
-    );
+    return mockData.map((user) => <SidebarIcon key={user.id} user={user} />);
 };
 
 export default SidebarPosts;

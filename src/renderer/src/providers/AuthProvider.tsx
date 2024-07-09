@@ -1,12 +1,16 @@
 import { PropsWithChildren, createContext } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { login, logout } from "../reducers/auth";
-import { AuthContextType, User, UserWithToken } from "@renderer/@types";
 
-export const AuthContext = createContext<AuthContextType>({
+export const AuthContext = createContext<{
+    user: any;
+    isLoggedIn: boolean;
+    login: (userData: any) => void;
+    logout: () => void;
+}>({
     user: null,
     isLoggedIn: false,
-    login: (userData: User) => userData,
+    login: (userData: any) => userData,
     logout: () => {}
 });
 
@@ -14,7 +18,7 @@ export function AuthProvider({ children }: PropsWithChildren) {
     const dispatch = useDispatch();
     const user = useSelector((state: any) => state.auth.user);
 
-    const loginUser = (userData: UserWithToken) => {
+    const loginUser = (userData: any) => {
         const { token, ...user } = userData;
         localStorage.setItem("ff-token", token);
         dispatch(login(user));

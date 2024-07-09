@@ -1,16 +1,15 @@
-import { useEffect, useState } from "react";
+import { FormEvent, useEffect, useRef, useState } from "react";
 import { useAuth } from "../hooks";
 import { useNavigate } from "react-router-dom";
 import { useMutation } from "@apollo/client";
 import { LoginUser } from "../gql/auth";
 
-import { FloatLabel } from "primereact/floatlabel";
-import { InputText } from "primereact/inputtext";
-import { Password } from "primereact/password";
-import { Button } from "primereact/button";
-import { LoginCredentials, LoginErrors } from "@renderer/@types";
+import { Button, Container, Form, HStack, Input, Text, VStack } from "rsuite";
+import { LoginSchema } from "@renderer/ValidationSchemas";
+import Field from "@renderer/components/Field";
 
 const LoginPage = () => {
+    const formRef = useRef<any>();
     const navigate = useNavigate();
 
     const { isLoggedIn, login } = useAuth();
@@ -19,12 +18,12 @@ const LoginPage = () => {
         if (isLoggedIn) navigate("/");
     }, [isLoggedIn]);
 
-    const [creds, setCreds] = useState<LoginCredentials>({
+    const [creds, setCreds] = useState<Record<string, string>>({
         usernameOrEmail: "",
         password: ""
     });
 
-    const [errors, setErrors] = useState<LoginErrors>({
+    const [errors, setErrors] = useState<Record<string, string | null>>({
         username: null,
         email: null,
         password: null
@@ -44,7 +43,6 @@ const LoginPage = () => {
         },
         onError: (error) => {
             const errs = error.graphQLErrors[0].extensions.errors as any[];
-            console.log(errs);
             errs.forEach((err) => {
                 setErrors((prev) => ({
                     ...prev,
@@ -57,81 +55,81 @@ const LoginPage = () => {
 
     if (isLoggedIn) return <></>;
 
-    const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setCreds({ ...creds, [e.target.name]: e.target.value });
+    const onChange = (formValue: Record<string, string>) => {
+        setCreds(formValue);
+    };
+
+    const onSubmit = (e?: FormEvent<HTMLFormElement>) => {
+        e?.preventDefault();
+        loginUser();
     };
 
     return (
-        <div
-            className="flex h-screen justify-center"
-            onKeyDown={(e) => {
-                if (e.key === "Enter") loginUser();
-            }}
+        <VStack
+            className="h-screen"
+            alignItems="center"
+            justifyContent="center"
         >
-            <div className="inline-flex flex-col m-auto p-10 justify-center items-center gap-10 m-auto shadow-2xl rounded-lg bg-neutral-700/[.05]">
-                <div>
-                    <span className="text-lg">Login to&nbsp;</span>
-                    <span className="text-lg font-bold">Fluffer</span>
-                </div>
-                <div className="flex flex-col gap-6 items-center justify-center">
-                    <div className="flex flex-col gap-2 items-center justify-center">
-                        <FloatLabel>
-                            <InputText
-                                id="usernameOrEmail"
-                                name="usernameOrEmail"
-                                onChange={onChange}
-                                value={creds.usernameOrEmail}
-                                invalid={!!errors.username || !!errors.email}
-                            />
-                            <label htmlFor="usernameOrEmail">
-                                Username or Email
-                            </label>
-                        </FloatLabel>
-                        {(errors.username || errors.email) && (
-                            <span className="text-red-500 text-sm">
-                                {errors.username || errors.email}
-                            </span>
-                        )}
-                    </div>
-                    <div className="flex flex-col gap-2 items-center justify-center">
-                        <FloatLabel>
-                            <Password
-                                id="password"
-                                name="password"
-                                type="password"
-                                onChange={onChange}
-                                value={creds.password}
-                                feedback={false}
-                                invalid={!!errors.password}
-                            />
-                            <label htmlFor="password">Password</label>
-                        </FloatLabel>
-                        {errors.password && (
-                            <span className="text-red-500 text-sm">
-                                {errors.password}
-                            </span>
-                        )}
-                    </div>
-                </div>
-                <div className="footer">
-                    <Button
-                        label="Submit"
-                        onClick={() => loginUser()}
-                        className="w-full"
-                        severity="success"
-                    />
-                    <p className="text-sm text-center mt-5">
-                        Don't have an account?{" "}
-                        <p
-                            className="text-blue-400 m-2 cursor-pointer"
-                            onClick={() => navigate("/register")}
+            <HStack>
+                <Text size="xxl">Login to</Text>
+                <Text size="xxl" weight="extrabold" className="text-primary">
+                    Fluffer
+                </Text>
+            </HStack>
+            <VStack
+                className="p-10 shadow-2xl rounded-lg bg-neutral-700/[.05]"
+                alignItems="center"
+                justifyContent="center"
+            >
+                <Container>
+                    <Form
+                        ref={formRef}
+                        onChange={onChange}
+                        onCheck={setErrors}
+                        formValue={creds}
+                        model={LoginSchema}
+                        onSubmit={(_, e) => onSubmit(e)}
+                    >
+                        <Field
+                            name="usernameOrEmail"
+                            label="Username or Email"
+                            error={errors.username || errors.email}
+                            acceptor={Input}
+                            size="lg"
+                            required
+                        />
+                        <Field
+                            name="password"
+                            label="Password"
+                            error={errors.password}
+                            acceptor={Input}
+                            autocomplete="off"
+                            type="password"
+                            size="lg"
+                            required
+                        />
+                        <Button
+                            appearance="primary"
+                            color="green"
+                            type="submit"
+                            size="lg"
+                            block
                         >
-                            Sign up
-                        </p>
-                    </p>
-                </div>
-            </div>
-        </div>
+                            Login
+                        </Button>
+                    </Form>
+                </Container>
+                <Container>
+                    <Button
+                        appearance="link"
+                        onClick={() => navigate("/register")}
+                        size="lg"
+                    >
+                        Don't have an account? Register
+                    </Button>
+                </Container>
+            </VStack>
+        </VStack>
     );
 };
 

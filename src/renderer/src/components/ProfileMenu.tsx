@@ -1,4 +1,4 @@
-import { Avatar } from "primereact/avatar";
+import { Avatar } from "rsuite";
 import { useAuth } from "../hooks";
 
 export const ProfileMenu = () => {
@@ -8,10 +8,13 @@ export const ProfileMenu = () => {
 
     return (
         <Avatar
-            label={user.username[0].toUpperCase()}
-            image={user.avatar ?? undefined}
-            shape="circle"
-            className="h-12 w-12"
+            circle
+            src={user.avatarUrl ?? ""}
+            size="lg"
+            alt={
+                user.globalName?.substring(0, 1).toUpperCase() ??
+                user.username.substring(0, 1).toUpperCase()
+            }
         />
     );
 };

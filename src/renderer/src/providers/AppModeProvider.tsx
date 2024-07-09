@@ -1,10 +1,13 @@
 import { PropsWithChildren, createContext, useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../hooks";
-import { AppModeContextType } from "@renderer/@types";
 
-export const AppModeContext = createContext<AppModeContextType>({
-    appMode: "servers",
+export const AppModeContext = createContext<{
+    appMode: "servers" | "posts" | null;
+    setAppMode: (_appMode: "servers" | "posts") => void;
+    changeAppMode: (_appMode: "servers" | "posts") => void;
+}>({
+    appMode: null,
     setAppMode: (_appMode: "servers" | "posts") => void 0,
     changeAppMode: (_appMode: "servers" | "posts") => void 0
 });
@@ -12,8 +15,10 @@ export const AppModeContext = createContext<AppModeContextType>({
 export function AppModeProvider({ children }: PropsWithChildren) {
     const location = useLocation();
     const navigate = useNavigate();
-    const { isLoggedIn } = useAuth();
-    const [appMode, setAppMode] = useState<"servers" | "posts">("servers");
+    const { isLoggedIn, user } = useAuth();
+    const [appMode, setAppMode] = useState<"servers" | "posts">(
+        user?.modePreference || "servers"
+    );
 
     useEffect(() => {
         if (!isLoggedIn && location.pathname === "/") navigate("/login");
@@ -23,14 +28,9 @@ export function AppModeProvider({ children }: PropsWithChildren) {
                 location.pathname.includes("posts"))
         )
             navigate("/login");
-        if (
-            isLoggedIn &&
-            (location.pathname === "/login" ||
-                location.pathname === "/register")
-        )
-            navigate(appMode);
 
         if (isLoggedIn && location.pathname === "/") navigate(appMode);
+
         if (location.pathname.includes("servers")) setAppMode("servers");
         if (location.pathname.includes("posts")) setAppMode("posts");
     }, [isLoggedIn, location.pathname, appMode]);
