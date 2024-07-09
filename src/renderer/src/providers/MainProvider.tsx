@@ -23,6 +23,7 @@ import { store, persistor } from "../reducers";
 import App from "../App";
 import { AuthProvider } from "./AuthProvider";
 import { AppModeProvider } from "./AppModeProvider";
+import { CustomProvider } from "rsuite";
 
 const { VITE_APP_URL, DEV } = import.meta.env;
 
@@ -110,13 +111,15 @@ export default (
     <Provider store={store}>
         <PersistGate loading={null} persistor={persistor}>
             <ApolloProvider client={client}>
-                <Router>
-                    <AuthProvider>
-                        <AppModeProvider>
-                            <App />
-                        </AppModeProvider>
-                    </AuthProvider>
-                </Router>
+                <CustomProvider theme="dark">
+                    <Router>
+                        <AuthProvider>
+                            <AppModeProvider>
+                                <App />
+                            </AppModeProvider>
+                        </AuthProvider>
+                    </Router>
+                </CustomProvider>
             </ApolloProvider>
         </PersistGate>
     </Provider>

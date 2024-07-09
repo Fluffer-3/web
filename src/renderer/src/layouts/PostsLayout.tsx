@@ -1,14 +1,10 @@
-import { Outlet, useParams } from "react-router-dom";
+import { Outlet } from "react-router-dom";
 import { VStack } from "rsuite";
 
 const PostLayout = () => {
-    const { postId } = useParams();
-
-    console.log(postId);
-
     return (
         <VStack>
-            <div>Navbar</div>
+            <div className="border-b-2">Navbar</div>
             <Outlet />
         </VStack>
     );

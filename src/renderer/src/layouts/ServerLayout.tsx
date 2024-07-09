@@ -1,14 +1,10 @@
-import { Outlet, useParams } from "react-router-dom";
+import { Outlet } from "react-router-dom";
 import { HStack } from "rsuite";
 
 const ServerLayout = () => {
-    const { serverId } = useParams();
-
-    console.log(serverId);
-
     return (
         <HStack>
-            <div>Sidebar</div>
+            <div className="border-r-2">Sidebar</div>
             <Outlet />
         </HStack>
     );

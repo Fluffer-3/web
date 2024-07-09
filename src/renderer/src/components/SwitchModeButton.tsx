@@ -16,10 +16,10 @@ const SwitchModeButton = () => {
         >
             <Avatar
                 circle
-                className="w-14 h-14 border border-blue-500 bg-neutral-700/[.9] cursor-pointer"
+                className="w-16 h-16 border-2 border-blue-500 bg-neutral-700/[.9] cursor-pointer"
                 onClick={() => changeAppMode("servers")}
             >
-                <Text weight="bold" size={13}>
+                <Text weight="bold" size={14}>
                     Posts
                 </Text>
             </Avatar>
@@ -36,11 +36,10 @@ const SwitchModeButton = () => {
         >
             <Avatar
                 circle
-                className="w-14 h-14 border border-green-500 bg-neutral-700/[.9] cursor-pointer"
+                className="w-16 h-16 border-2 border-green-500 bg-neutral-700/[.9] cursor-pointer"
                 onClick={() => changeAppMode("posts")}
             >
-                {" "}
-                <Text weight="bold" size={13}>
+                <Text weight="bold" size={14}>
                     Servers
                 </Text>
             </Avatar>
