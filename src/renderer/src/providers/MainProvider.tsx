@@ -24,6 +24,7 @@ import App from "../App";
 import { AuthProvider } from "./AuthProvider";
 import { AppModeProvider } from "./AppModeProvider";
 import { CustomProvider } from "rsuite";
+import { useTheme } from "@renderer/hooks";
 
 const { VITE_APP_URL, DEV } = import.meta.env;
 
@@ -107,20 +108,24 @@ const client = new ApolloClient({
     }
 });
 
-export default (
-    <Provider store={store}>
-        <PersistGate loading={null} persistor={persistor}>
-            <ApolloProvider client={client}>
-                <CustomProvider theme="dark">
+export default function MainProvider() {
+    const { theme } = useTheme();
+
+    return (
+        <Provider store={store}>
+            <PersistGate loading={null} persistor={persistor}>
+                <ApolloProvider client={client}>
                     <Router>
-                        <AuthProvider>
-                            <AppModeProvider>
-                                <App />
-                            </AppModeProvider>
-                        </AuthProvider>
+                        <CustomProvider theme={theme}>
+                            <AuthProvider>
+                                <AppModeProvider>
+                                    <App />
+                                </AppModeProvider>
+                            </AuthProvider>
+                        </CustomProvider>
                     </Router>
-                </CustomProvider>
-            </ApolloProvider>
-        </PersistGate>
-    </Provider>
-);
+                </ApolloProvider>
+            </PersistGate>
+        </Provider>
+    );
+}

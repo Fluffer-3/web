@@ -3,7 +3,11 @@ import { HStack } from "rsuite";
 
 const ServerLayout = () => {
     return (
-        <HStack className="w-full h-full">
+        <HStack
+            justifyContent="flex-start"
+            alignItems="flex-start"
+            className="w-full h-full"
+        >
             <div className="border-r-2">Sidebar</div>
             <div className="p-8">
                 <Outlet />

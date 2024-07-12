@@ -1,4 +1,4 @@
-import PostsNavbar from "@renderer/components/PostsNavbar";
+import PostsNavbar from "@renderer/components/posts/PostsNavbar";
 import { Outlet } from "react-router-dom";
 import { VStack } from "rsuite";
 

@@ -6,7 +6,11 @@ const Layout = () => {
     return (
         <div className="flex">
             <Sidebar />
-            <VStack className="w-full h-screen">
+            <VStack
+                alignItems="flex-start"
+                justifyContent="flex-start"
+                className="w-full h-screen"
+            >
                 <Outlet />
             </VStack>
         </div>

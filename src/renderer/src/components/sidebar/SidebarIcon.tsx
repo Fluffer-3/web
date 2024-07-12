@@ -17,16 +17,18 @@ const SidebarIcon = ({ server, user, active, hovered }: any) => {
             {server.icon ? (
                 <Avatar
                     size="lg"
-                    className="rounded-full bg-transparent mb-1 cursor-pointer"
+                    className=" bg-transparent mb-1 cursor-pointer"
                     src={server.icon}
                     alt={server.name}
+                    circle
                     onClick={() => navigate(`/servers/${server.id}`)}
                 />
             ) : (
                 <Avatar
                     size="lg"
-                    className="rounded-full bg-neutral-700 mb-1 cursor-pointer"
+                    className="mb-1 cursor-pointer"
                     alt={server.name}
+                    circle
                     onClick={() => navigate(`/servers/${server.id}`)}
                 >
                     <Text size={18}>{server.nameAcronym}</Text>
@@ -48,16 +50,18 @@ const SidebarIcon = ({ server, user, active, hovered }: any) => {
             {user.avatar ? (
                 <Avatar
                     size="lg"
-                    className="rounded-full bg-transparent mb-1 cursor-pointer"
+                    className="bg-transparent mb-1 cursor-pointer"
                     src={user.avatar}
-                    alt={user.username}
+                    alt={" "}
+                    circle
                     onClick={() => navigate(`/posts/${user.id}`)}
-                />
+                ></Avatar>
             ) : (
                 <Avatar
                     size="lg"
-                    className="rounded-full bg-neutral-700 mb-1 cursor-pointer hover:bg-neutral-800 transition-colors duration-200 ease-in-out"
+                    className="bg-neutral-700 mb-1 cursor-pointer hover:bg-neutral-800 transition-colors duration-200 ease-in-out"
                     alt={user.username}
+                    circle
                     onClick={() => navigate(`/posts/${user.id}`)}
                 >
                     <Text size={18}>
@@ -73,7 +77,7 @@ const SidebarIcon = ({ server, user, active, hovered }: any) => {
         </Whisper>
     );
 
-    return <div className="">{server ? <ServerIcon /> : <UserIcon />}</div>;
+    return server ? <ServerIcon /> : <UserIcon />;
 };
 
 export default SidebarIcon;
