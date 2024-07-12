@@ -1,7 +1,9 @@
-import { app, shell, BrowserWindow } from "electron";
+import { app, shell, BrowserWindow, Tray, nativeImage } from "electron";
 import { join } from "path";
 import { electronApp, optimizer, is } from "@electron-toolkit/utils";
-import icon from "../../resources/icon.png?asset";
+import iconUrl from "../../resources/icons/png/icon.png?asset";
+
+const icon = nativeImage.createFromPath(join(__dirname, iconUrl));
 
 function createWindow() {
     // Create the browser window.
@@ -17,6 +19,7 @@ function createWindow() {
             devTools: is.dev,
             nodeIntegration: true
         },
+        icon,
         maximizable: true
     });
 
@@ -50,6 +53,11 @@ function createWindow() {
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.whenReady().then(() => {
+    const tray = new Tray(icon);
+
+    tray.setToolTip("Fluffer");
+    tray.setTitle("Fluffer");
+
     // Set app user model id for windows
     electronApp.setAppUserModelId("com.fluffer");
 
@@ -70,6 +78,8 @@ app.whenReady().then(() => {
         // dock icon is clicked and there are no other windows open.
         if (BrowserWindow.getAllWindows().length === 0) createWindow();
     });
+
+    app.dock.setIcon(icon);
 });
 
 // Quit when all windows are closed, except on macOS. There, it's common

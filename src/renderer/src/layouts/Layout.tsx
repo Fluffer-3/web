@@ -6,7 +6,7 @@ const Layout = () => {
     return (
         <div className="flex">
             <Sidebar />
-            <VStack className="w-full p-8 h-screen">
+            <VStack className="w-full h-screen">
                 <Outlet />
             </VStack>
         </div>

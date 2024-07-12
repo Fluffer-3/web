@@ -3,11 +3,11 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../hooks";
 
 export const AppModeContext = createContext<{
-    appMode: "servers" | "posts" | null;
+    appMode: "servers" | "posts";
     setAppMode: (_appMode: "servers" | "posts") => void;
     changeAppMode: (_appMode: "servers" | "posts") => void;
 }>({
-    appMode: null,
+    appMode: "servers",
     setAppMode: (_appMode: "servers" | "posts") => void 0,
     changeAppMode: (_appMode: "servers" | "posts") => void 0
 });
