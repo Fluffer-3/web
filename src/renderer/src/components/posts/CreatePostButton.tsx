@@ -1,5 +1,5 @@
+import { Button } from "primereact/button";
 import { FaPlusCircle } from "react-icons/fa";
-import { Button } from "rsuite";
 
 const CreatePostButton = () => {
     return (

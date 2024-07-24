@@ -1,35 +1,27 @@
-import { Button, HStack, Stack } from "rsuite";
 import ProfileMenu from "../ProfileMenu";
 import { useNavigate } from "react-router-dom";
 import SearchBar from "../SearchBar";
 import CreatePostButton from "./CreatePostButton";
+import { Button } from "primereact/button";
 
 const PostsNavbar = () => {
     const navigate = useNavigate();
 
     return (
-        <HStack
-            alignItems="center"
-            justifyContent="space-between"
-            className="w-full border-b border-blue-500 shadow-2xl px-4 py-2 bg-neutral-700[.2]"
-        >
-            <HStack justifyContent="flex-start" alignItems="center">
+        <div className="flex flex-col justify-between itemsa-center w-full border-b border-blue-500 shadow-2xl px-4 py-2 bg-neutral-700[.2]">
+            <div className="flex justify-start items-center">
                 <ProfileMenu />
-                <Stack className="ml-4">
+                <div className="flex ml-4">
                     <CreatePostButton />
-                </Stack>
-            </HStack>
+                </div>
+            </div>
             <SearchBar />
-            <HStack className="ml-4">
-                <Button
-                    onClick={() => navigate("/posts/trending")}
-                    color="red"
-                    appearance="ghost"
-                >
+            <div className="flex ml-4">
+                <Button onClick={() => navigate("/posts/trending")} color="red">
                     Trending
                 </Button>
-            </HStack>
-        </HStack>
+            </div>
+        </div>
     );
 };
 

@@ -1,37 +1,35 @@
 import SidebarPosts from "./SidebarPosts";
 import SidebarServers from "./SidebarServers";
 import { useAppMode } from "../../hooks";
-import { Avatar, VStack } from "rsuite";
 import SwitchModeButton from "../SwitchModeButton";
 import classNames from "classnames";
+import { Avatar } from "primereact/avatar";
 
 const Sidebar = () => {
     const { appMode } = useAppMode();
 
     return (
-        <VStack
-            justifyContent="center"
-            alignItems="center"
-            spacing={5}
-            className={classNames("h-screen bg-neutral-700/[.2]", {
-                "border-r border-blue-500": appMode === "posts",
-                "border-r border-green-500": appMode === "servers"
-            })}
+        <div
+            className={classNames(
+                "flex flex-col items-center justify-centerh-screen bg-neutral-700/[.2] gap-1",
+                {
+                    "border-r border-blue-500": appMode === "posts",
+                    "border-r border-green-500": appMode === "servers"
+                }
+            )}
         >
             <Avatar
-                className={classNames("bg-transparent", {
+                className={classNames("bg-transparent h-16 w-16", {
                     "border-2 border-blue-500": appMode === "posts",
                     "border-2 border-green-500": appMode === "servers"
                 })}
-                src="/logo.png"
-                size="lg"
-                circle
+                shape="circle"
+                image="/logo.png"
             />
 
-            <VStack
-                alignItems="center"
+            <div
                 className={classNames(
-                    "flex-grow w-full shadow-2xl bg-neutral-700/[.4] px-5 py-3 border-y gap-3",
+                    "flex flex-col items-center flex-grow w-full shadow-2xl bg-neutral-700/[.4] px-5 py-3 border-y gap-1",
                     {
                         "border-blue-500": appMode === "posts",
                         "border-green-500": appMode === "servers"
@@ -39,10 +37,12 @@ const Sidebar = () => {
                 )}
             >
                 {appMode === "posts" ? <SidebarPosts /> : <SidebarServers />}
-            </VStack>
+            </div>
 
-            <SwitchModeButton />
-        </VStack>
+            <div className="p-1">
+                <SwitchModeButton />
+            </div>
+        </div>
     );
 };
 

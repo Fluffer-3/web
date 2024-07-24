@@ -1,14 +1,6 @@
-import { VStack, Loader } from "rsuite";
-
 const APILoading = () => {
     return (
-        <VStack
-            alignItems="center"
-            justifyContent="center"
-            className="h-screen"
-        >
-            <Loader size="lg" />
-        </VStack>
+        <div className="flex flex-col justify-center items-center h-screen"></div>
     );
 };
 

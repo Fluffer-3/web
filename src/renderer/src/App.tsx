@@ -33,6 +33,7 @@ const App = () => {
         <Routes>
             <Route path="/" element={<Layout />}>
                 <Route path="/servers" element={<ServerLayout />}>
+                    <Route index element={<ServerPage />} />
                     <Route path=":serverId" element={<ServerPage />} />
                 </Route>
                 <Route path="/posts" element={<PostLayout />}>

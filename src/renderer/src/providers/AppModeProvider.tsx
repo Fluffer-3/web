@@ -33,7 +33,7 @@ export function AppModeProvider({ children }: PropsWithChildren) {
 
         if (location.pathname.includes("servers")) setAppMode("servers");
         if (location.pathname.includes("posts")) setAppMode("posts");
-    }, [isLoggedIn, location.pathname, appMode]);
+    }, [isLoggedIn, appMode]);
 
     const changeAppMode = (appMode: "servers" | "posts") => {
         setAppMode(appMode);

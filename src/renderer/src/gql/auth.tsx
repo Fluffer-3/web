@@ -27,6 +27,7 @@ export const RegisterUser = gql`
         $displayName: String
         $password: String!
         $confirmPassword: String!
+        $dateOfBirth: String!
     ) {
         registerUser(
             input: {
@@ -35,6 +36,7 @@ export const RegisterUser = gql`
                 displayName: $displayName
                 password: $password
                 confirmPassword: $confirmPassword
+                dateOfBirth: $dateOfBirth
             }
         )
     }

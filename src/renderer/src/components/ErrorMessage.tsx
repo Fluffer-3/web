@@ -1,5 +1,3 @@
-import { Heading, Text, VStack } from "rsuite";
-
 const ErrorMessage = ({
     message,
     subtext
@@ -7,21 +5,15 @@ const ErrorMessage = ({
     message: string;
     subtext?: string | string[];
 }) => (
-    <VStack className="justify-center items-center">
-        <Heading level={2} className="text-2xl font-bold">
-            {message}
-        </Heading>
+    <div className="flex flex-col justify-center items-center">
+        <span className="text-2xl font-bold">{message}</span>
         {subtext &&
             (Array.isArray(subtext) ? (
-                subtext.map((text, i) => (
-                    <Text size="xl" key={i}>
-                        {text}
-                    </Text>
-                ))
+                subtext.map((text, i) => <span key={i}>{text}</span>)
             ) : (
                 <p className="text-lg">{subtext}</p>
             ))}
-    </VStack>
+    </div>
 );
 
 export default ErrorMessage;

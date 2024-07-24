@@ -1,41 +1,115 @@
-import SidebarIcon from "../sidebar/SidebarIcon";
 import SidebarAddServerIcon from "../server/SidebarAddServerIcon";
-import { Navigate, useParams } from "react-router-dom";
+import { useQuery } from "@apollo/client";
+import { GetUserServers, OnServerCreated } from "@renderer/gql/servers";
+import { useEffect, useRef, useState } from "react";
+import { Navigate, useNavigate, useParams } from "react-router-dom";
+import { ContextMenu } from "primereact/contextmenu";
+import { Avatar } from "primereact/avatar";
+import { useAuth } from "@renderer/hooks";
+import { FaSignOutAlt } from "react-icons/fa";
+import { MdDeleteForever } from "react-icons/md";
+import { Tooltip } from "primereact/tooltip";
 
 const SidebarServers = () => {
     const { serverId } = useParams();
+    const { user } = useAuth();
+    const navigate = useNavigate();
+    const cm = useRef<ContextMenu>(null);
 
-    const mockData: any[] = [
+    const [servers, setServers] = useState<any[]>([]);
+    const [currentServer, setCurrentServer] = useState<any | null>(null);
+
+    const { subscribeToMore } = useQuery(GetUserServers, {
+        onCompleted: (data) => {
+            setServers(data.getUserServers);
+        }
+    });
+
+    useEffect(() => {
+        subscribeToMore({
+            document: OnServerCreated,
+            updateQuery: (prev, { subscriptionData }) => {
+                if (!subscriptionData.data) return prev;
+                const newServer = subscriptionData.data.serverCreated;
+                if (!newServer) return;
+
+                setServers([newServer, ...servers]);
+            }
+        });
+    }, [servers]);
+
+    if (!servers) return <SidebarAddServerIcon />;
+    if (servers.length === 0) return <SidebarAddServerIcon />;
+    if (!serverId) return <Navigate to={`/servers/${servers[0].id}`} />;
+
+    const items = [
         {
-            id: "1",
-            name: "Server 1",
-            nameAcronym: "S1",
-            icon: "https://images-ext-1.discordapp.net/external/PYMccFyhxiLCipbReDkG3fzQaRGr5UOeR5yiNd0kbm4/%3Fsize%3D256/https/cdn.discordapp.com/avatars/401269337924829186/a_36e2b03c7e8032ee16a60cf7f95db736.gif?width=281&height=281",
-            iconUrl:
-                "https://images-ext-1.discordapp.net/external/PYMccFyhxiLCipbReDkG3fzQaRGr5UOeR5yiNd0kbm4/%3Fsize%3D256/https/cdn.discordapp.com/avatars/401269337924829186/a_36e2b03c7e8032ee16a60cf7f95db736.gif?width=281&height=281"
-        },
-        {
-            id: "2",
-            name: "Server 2",
-            nameAcronym: "S2"
-        },
-        {
-            id: "3",
-            name: "Server 3",
-            nameAcronym: "S3"
+            label:
+                user.id === currentServer?.owner.id
+                    ? "Delete Server"
+                    : "Leave Server",
+            icon:
+                user.id === currentServer?.owner.id ? (
+                    <MdDeleteForever size={20} />
+                ) : (
+                    <FaSignOutAlt className="mr-2" />
+                )
         }
     ];
 
-    if (!serverId) return <Navigate to={`/servers/${mockData[0].id}`} />;
+    const onRightClick = (e: any, server: any) => {
+        if (cm.current) {
+            setCurrentServer(server);
+            cm.current.show(e);
+        }
+    };
 
     return (
         <>
-            {mockData.map((server) => (
-                <SidebarIcon key={server.id} server={server} />
+            {servers.map((server) => (
+                <>
+                    <Tooltip
+                        target={`.server-icon-${server.id}`}
+                        position="right"
+                        content={server.name}
+                    />
+                    {server.icon ? (
+                        <Avatar
+                            key={server.id}
+                            image={server.icon}
+                            shape="circle"
+                            className={`w-16 h-16 bg-transparent mb-1 cursor-pointer text-transparent server-icon-${server.id}`}
+                            onClick={() => navigate(`/servers/${server.id}`)}
+                            onContextMenu={(e) => onRightClick(e, server)}
+                        />
+                    ) : (
+                        <Avatar
+                            key={server.id}
+                            label={server.nameAcronym}
+                            shape="circle"
+                            className={`w-16 h-16 bg-neutral-700 mb-1 cursor-pointer server-icon-${server.id}`}
+                            onClick={() => navigate(`/servers/${server.id}`)}
+                            onContextMenu={(e) => onRightClick(e, server)}
+                        />
+                    )}
+                </>
             ))}
+            <ContextMenu
+                model={items}
+                ref={cm}
+                onHide={() => setCurrentServer(null)}
+            />
             <SidebarAddServerIcon />
         </>
     );
 };
 
 export default SidebarServers;
+
+/**!SECTION
+ *  <SidebarIcon
+                    key={server.id}
+                    server={server}
+                    active={server.id === serverId}
+                />
+ */

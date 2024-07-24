@@ -1,49 +1,34 @@
 import { useAppMode } from "@renderer/hooks";
-import { Whisper, Tooltip, Avatar, Text } from "rsuite";
+import { Avatar } from "primereact/avatar";
+import { Tooltip } from "primereact/tooltip";
+import { classNames } from "primereact/utils";
 
 const SwitchModeButton = () => {
     const { appMode, changeAppMode } = useAppMode();
 
-    return appMode === "posts" ? (
-        <Whisper
-            trigger="hover"
-            placement="right"
-            speaker={
-                <Tooltip>
-                    <Text size="lg">Switch to servers</Text>
-                </Tooltip>
-            }
-        >
+    return (
+        <>
+            <Tooltip
+                target=".switch-mode-button"
+                content={`Switch to ${appMode === "servers" ? "Posts" : "Servers"}`}
+                position="mouse"
+                event="both"
+                mouseTrack
+            />
             <Avatar
-                circle
-                className="w-16 h-16 border-2 border-blue-500 bg-neutral-700/[.9] cursor-pointer"
-                onClick={() => changeAppMode("servers")}
-            >
-                <Text weight="bold" size={14}>
-                    Posts
-                </Text>
-            </Avatar>
-        </Whisper>
-    ) : (
-        <Whisper
-            trigger="hover"
-            placement="right"
-            speaker={
-                <Tooltip>
-                    <Text size="lg">Switch to posts</Text>
-                </Tooltip>
-            }
-        >
-            <Avatar
-                circle
-                className="w-16 h-16 border-2 border-green-500 bg-neutral-700/[.9] cursor-pointer"
-                onClick={() => changeAppMode("posts")}
-            >
-                <Text weight="bold" size={14}>
-                    Servers
-                </Text>
-            </Avatar>
-        </Whisper>
+                shape="circle"
+                label={appMode === "servers" ? "Servers" : "Posts"}
+                className={classNames(
+                    "w-16 h-16 bg-neutral-700/[.9] cursor-pointer switch-mode-button",
+                    appMode === "servers"
+                        ? "border-2 border-green-500"
+                        : "border-2 border-blue-500"
+                )}
+                onClick={() =>
+                    changeAppMode(appMode === "servers" ? "posts" : "servers")
+                }
+            />
+        </>
     );
 };
 

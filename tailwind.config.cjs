@@ -3,7 +3,8 @@ module.exports = {
     darkMode: "selector",
     content: [
         "./src/renderer/index.html",
-        "./src/renderer/src/**/*.{svelte,js,ts,jsx,tsx}"
+        "./src/renderer/src/**/*.{svelte,js,ts,jsx,tsx}",
+        "./node_modules/primereact/**/*.{js,ts,jsx,tsx}"
     ],
     theme: {
         extend: {}

@@ -1,21 +1,12 @@
-import { Text, VStack } from "rsuite";
 import Logo from "../Logo";
 
 const APIDown = () => {
     return (
-        <VStack
-            alignItems="center"
-            justifyContent="center"
-            className="h-screen"
-        >
+        <div className="flex flex-col justify-center items-center h-screen">
             <Logo />
-            <Text weight="bold" size={30}>
-                Fluffer
-            </Text>
-            <Text size="xxl" weight="semibold">
-                😢 Server is down 😢
-            </Text>
-        </VStack>
+            <span>Fluffer</span>
+            <span>😢 Server is down 😢</span>
+        </div>
     );
 };
 

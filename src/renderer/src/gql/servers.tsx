@@ -10,3 +10,39 @@ export const CreateServer = gql`
         }
     }
 `;
+
+export const GetUserServers = gql`
+    query getUserServers($id: String) {
+        getUserServers(id: $id) {
+            id
+            name
+            nameAcronym
+            icon
+            owner {
+                id
+            }
+        }
+    }
+`;
+
+export const GetServerSidebarInfo = gql`
+    query getServerSidebarInfo($id: String!) {
+        getServer(id: $id) {
+            id
+            name
+            nameAcronym
+            icon
+        }
+    }
+`;
+
+export const OnServerCreated = gql`
+    subscription serverCreated {
+        serverCreated {
+            id
+            name
+            nameAcronym
+            icon
+        }
+    }
+`;

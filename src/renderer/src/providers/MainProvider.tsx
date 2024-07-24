@@ -23,8 +23,7 @@ import { store, persistor } from "../reducers";
 import App from "../App";
 import { AuthProvider } from "./AuthProvider";
 import { AppModeProvider } from "./AppModeProvider";
-import { CustomProvider } from "rsuite";
-import { useTheme } from "@renderer/hooks";
+import { PrimeReactProvider } from "primereact/api";
 
 const { VITE_APP_URL, DEV } = import.meta.env;
 
@@ -32,17 +31,15 @@ const httpLink = createUploadLink({
     uri: VITE_APP_URL
 });
 
-const wsUrl = `${VITE_APP_URL.replace("http", "ws").replace(
-    "https",
-    "wss"
-)}/ws`;
+const wsUrl = VITE_APP_URL.replace("http", "ws").replace("https", "wss");
 
 const wsLink = new GraphQLWsLink(
     createClient({
         url: wsUrl,
         connectionParams: {
             token: localStorage.getItem("ff-token")
-        }
+        },
+        keepAlive: 10000
     })
 );
 
@@ -94,6 +91,7 @@ const splitLink = split(
 );
 
 const link = ApolloLink.from([retryLink, errorLink, authLink, splitLink]);
+
 const cache = new InMemoryCache({
     addTypename: false
 });
@@ -109,20 +107,18 @@ const client = new ApolloClient({
 });
 
 export default function MainProvider() {
-    const { theme } = useTheme();
-
     return (
         <Provider store={store}>
             <PersistGate loading={null} persistor={persistor}>
                 <ApolloProvider client={client}>
                     <Router>
-                        <CustomProvider theme={theme}>
+                        <PrimeReactProvider>
                             <AuthProvider>
                                 <AppModeProvider>
                                     <App />
                                 </AppModeProvider>
                             </AuthProvider>
-                        </CustomProvider>
+                        </PrimeReactProvider>
                     </Router>
                 </ApolloProvider>
             </PersistGate>

@@ -1,100 +1,146 @@
-import { FormEvent, useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { useAuth } from "../hooks";
 import { useNavigate } from "react-router-dom";
 import { useMutation } from "@apollo/client";
 import { LoginUser } from "../gql/auth";
 
-import { Button, Container, Form, HStack, Input, Text, VStack } from "rsuite";
+import { Button } from "primereact/button";
+import { InputText } from "primereact/inputtext";
 import { LoginSchema } from "@renderer/ValidationSchemas";
-import Field from "@renderer/components/Field";
+import { Form, Formik } from "formik";
+import { Password } from "primereact/password";
 
 const LoginPage = () => {
-    const formRef = useRef<any>();
     const navigate = useNavigate();
 
     const { isLoggedIn, login } = useAuth();
+
+    const [unsuccesful, setUnsuccesful] = useState(false);
 
     useEffect(() => {
         if (isLoggedIn) navigate("/");
     }, [isLoggedIn]);
 
-    const [creds, setCreds] = useState<Record<string, string>>({
-        usernameOrEmail: "",
-        password: ""
-    });
-
-    const [errors, setErrors] = useState<Record<string, string | null>>({
-        username: null,
-        email: null,
-        password: null
-    });
-
     const [loginUser] = useMutation(LoginUser, {
         update: (_, { data: { loginUser: userData } = {} }) => {
-            setErrors({
-                email: null,
-                password: null,
-                username: null
-            });
-
-            setCreds({ usernameOrEmail: "", password: "" });
-
             login(userData);
         },
-        onError: (error) => {
-            const errs = error.graphQLErrors[0].extensions.errors as any[];
-            errs.forEach((err) => {
-                setErrors((prev) => ({
-                    ...prev,
-                    [err.type]: err.message
-                }));
-            });
-        },
-        variables: creds
+        onError: () => {
+            setUnsuccesful(true);
+        }
     });
 
     if (isLoggedIn) return <></>;
 
-    const onChange = (formValue: Record<string, string>) => {
-        setCreds(formValue);
-    };
-
-    const onSubmit = (e?: FormEvent<HTMLFormElement>) => {
-        e?.preventDefault();
-        loginUser();
-    };
-
     return (
-        <VStack
-            className="h-screen"
-            alignItems="center"
-            justifyContent="center"
-        >
-            <HStack>
-                <Text size="xxl">Login to</Text>
-                <Text size="xxl" weight="extrabold" className="text-primary">
-                    Fluffer
-                </Text>
-            </HStack>
-            <VStack
-                className="p-10 shadow-2xl rounded-lg bg-neutral-700/[.05]"
-                alignItems="center"
-                justifyContent="center"
-            >
-                <Container>
-                    <Form
-                        ref={formRef}
-                        onChange={onChange}
-                        onCheck={setErrors}
-                        formValue={creds}
-                        model={LoginSchema}
-                        onSubmit={(_, e) => onSubmit(e)}
+        <div className="flex flex-col justify-center items-center h-screen">
+            <div className="flex flex-col justify-center p-10 items-center w-[500px] rounded-xl bg-neutral-700/[0.05]">
+                <div className="flex text-xl">
+                    <span>Login to&nbsp;</span>
+                    <span className="font-bold">Fluffer</span>
+                </div>
+                <div className="flex flex-col justify-center items-center w-full">
+                    <Formik
+                        initialValues={{
+                            usernameOrEmail: "",
+                            password: ""
+                        }}
+                        validationSchema={LoginSchema}
+                        onSubmit={(values) => loginUser({ variables: values })}
                     >
-                        <Field
+                        {({ errors, handleChange, touched, values }) => (
+                            <Form className="w-full">
+                                <div className="flex flex-col justify-center items-center pt-8 px-8 py-4 gap-2 w-full">
+                                    <div className="flex flex-col gap-1 w-full">
+                                        <label htmlFor="usernameOrEmail">
+                                            Username or Email{" "}
+                                            <span className="text-red-500">
+                                                *
+                                            </span>
+                                        </label>
+                                        <InputText
+                                            id="usernameOrEmail"
+                                            name="usernameOrEmail"
+                                            onChange={handleChange}
+                                            autoComplete="off"
+                                            invalid={
+                                                !!errors.usernameOrEmail &&
+                                                touched.usernameOrEmail
+                                            }
+                                            value={values.usernameOrEmail}
+                                            required
+                                            type="text"
+                                        />
+                                        {errors.usernameOrEmail && (
+                                            <small className="text-red-500 text-xs">
+                                                {errors.usernameOrEmail}
+                                            </small>
+                                        )}
+                                    </div>
+                                    <div className="flex flex-col gap-1 w-full">
+                                        <label htmlFor="password">
+                                            Password{" "}
+                                            <span className="text-red-500">
+                                                *
+                                            </span>
+                                        </label>
+                                        <InputText
+                                            id="password"
+                                            name="password"
+                                            toggleMask
+                                            type="password"
+                                            onChange={handleChange}
+                                            invalid={
+                                                (!!errors.password &&
+                                                    touched.password) ||
+                                                unsuccesful
+                                            }
+                                            value={values.password}
+                                            required
+                                        />
+                                        {errors.password && (
+                                            <small className="text-red-500 text-xs">
+                                                {errors.password}
+                                            </small>
+                                        )}
+                                        {unsuccesful && (
+                                            <small className="text-red-500 text-xs">
+                                                Invalid username or password
+                                            </small>
+                                        )}
+                                    </div>
+                                    <div className="flex flex-col mt-2 gap-2">
+                                        <Button
+                                            type="submit"
+                                            label="Login"
+                                            severity="success"
+                                            className="w-full"
+                                        />
+                                        <Button
+                                            link
+                                            onClick={() =>
+                                                navigate("/register")
+                                            }
+                                            label="Don't have an account? Register"
+                                        />
+                                    </div>
+                                </div>
+                                <div className="flex flex-col justify-center"></div>
+                            </Form>
+                        )}
+                    </Formik>
+                </div>
+            </div>
+        </div>
+    );
+};
+
+export default LoginPage;
+
+/*<Field
                             name="usernameOrEmail"
                             label="Username or Email"
                             error={errors.username || errors.email}
-                            acceptor={Input}
                             size="lg"
                             required
                         />
@@ -108,29 +154,4 @@ const LoginPage = () => {
                             size="lg"
                             required
                         />
-                        <Button
-                            appearance="primary"
-                            color="green"
-                            type="submit"
-                            size="lg"
-                            block
-                        >
-                            Login
-                        </Button>
-                    </Form>
-                </Container>
-                <Container>
-                    <Button
-                        appearance="link"
-                        onClick={() => navigate("/register")}
-                        size="lg"
-                    >
-                        Don't have an account? Register
-                    </Button>
-                </Container>
-            </VStack>
-        </VStack>
-    );
-};
-
-export default LoginPage;
+*/

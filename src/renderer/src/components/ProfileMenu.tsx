@@ -1,4 +1,4 @@
-import { Avatar, Dropdown, Text } from "rsuite";
+import { Avatar } from "primereact/avatar";
 import { useAppMode, useAuth } from "../hooks";
 import { FaSignOutAlt } from "react-icons/fa";
 
@@ -26,43 +26,18 @@ export const ProfileMenu = () => {
                 circle
                 {...props}
             >
-                <Text size={18}>
+                <span>
                     {user.globalName
                         ? user.globalName
                               .split(" ")
                               .map((str: string) => str[0].toUpperCase())
                               .join("")
                         : user.username[0].toUpperCase()}
-                </Text>
+                </span>
             </Avatar>
         );
 
-    return (
-        <Dropdown noCaret renderToggle={renderToggle}>
-            <Dropdown.Item panel style={{ padding: "10px 20px" }}>
-                {user.globalName ? (
-                    <>
-                        <Text size="lg">{user.globalName}</Text>
-                        <Text>@{user.username}</Text>
-                    </>
-                ) : (
-                    <Text>@{user.username}</Text>
-                )}
-            </Dropdown.Item>
-            <Dropdown.Separator />
-            <Dropdown.Item
-                style={{
-                    padding: "10px 20px"
-                }}
-                className="cursor-pointer flex justify-center items-center"
-                panel
-                onClick={() => logout()}
-            >
-                <FaSignOutAlt className="mr-1" />
-                Logout
-            </Dropdown.Item>
-        </Dropdown>
-    );
+    return <></>;
 };
 
 export default ProfileMenu;
