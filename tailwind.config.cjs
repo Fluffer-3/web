@@ -4,7 +4,7 @@ module.exports = {
     content: [
         "./src/renderer/index.html",
         "./src/renderer/src/**/*.{svelte,js,ts,jsx,tsx}",
-        "./node_modules/primereact/**/*.{js,ts,jsx,tsx}"
+        "./node_modules/@mantine/core/**/*.{js,ts,jsx,tsx}"
     ],
     theme: {
         extend: {}

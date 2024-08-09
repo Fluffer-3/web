@@ -1,11 +1,15 @@
-import { Button } from "primereact/button";
+import { Button } from "@mantine/core";
 import { FaPlusCircle } from "react-icons/fa";
 
 const CreatePostButton = () => {
     return (
         <>
-            <Button color="green">
-                <FaPlusCircle className="mr-1" /> Create Post
+            <Button
+                variant="light"
+                color="green"
+                leftSection={<FaPlusCircle />}
+            >
+                Create Post
             </Button>
         </>
     );

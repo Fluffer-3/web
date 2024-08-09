@@ -3,11 +3,9 @@ import { useAuth } from "../hooks";
 import { useNavigate } from "react-router-dom";
 import { useMutation } from "@apollo/client";
 import { RegisterUser } from "../gql/auth";
-import { Button } from "primereact/button";
 import { Form, Formik } from "formik";
 import { RegisterSchema } from "@renderer/ValidationSchemas";
-import { InputText } from "primereact/inputtext";
-import { InputMask } from "primereact/inputmask";
+import { Button, Input, TextInput } from "@mantine/core";
 
 const RegisterPage = () => {
     const navigate = useNavigate();
@@ -36,7 +34,7 @@ const RegisterPage = () => {
             setSuccessful(true);
         },
         onError: (error) => {
-            const errs = error.graphQLErrors[0].extensions.errors as any[];
+            const errs = error.graphQLErrors[0].extensions?.errors as any[];
             if (errs) {
                 errs.forEach((e) => {
                     setServerErrors((prev) => ({
@@ -60,6 +58,7 @@ const RegisterPage = () => {
                     <div className="container">
                         <Button
                             color="green"
+                            size="lg"
                             onClick={() => navigate("/login")}
                         >
                             Login
@@ -71,7 +70,7 @@ const RegisterPage = () => {
 
     return (
         <div className="flex flex-col justify-center items-center h-screen">
-            <div className="flex flex-col justify-center p-10 items-center w-[500px] rounded-xl bg-neutral-700/[0.05]">
+            <div className="flex flex-col justify-center p-10 items-center w-[500px] rounded-xl bg-neutral-700/[0.05] border border-blue-500/60">
                 <div className="flex font-bold text-xl">
                     <span>Create an account</span>
                 </div>
@@ -94,184 +93,216 @@ const RegisterPage = () => {
                             <Form className="w-full">
                                 <div className="flex flex-col justify-center items-center pt-8 px-8 py-4 gap-2 w-full">
                                     <div className="flex flex-col gap-1 w-full">
-                                        <label htmlFor="email">
+                                        <Input.Label
+                                            size="lg"
+                                            required
+                                            htmlFor="email"
+                                        >
                                             Email{" "}
-                                            <span className="text-red-500">
-                                                *
-                                            </span>
-                                        </label>
-                                        <InputText
+                                        </Input.Label>
+                                        <TextInput
                                             id="email"
                                             name="email"
                                             onChange={handleChange}
                                             autoComplete="off"
-                                            className="p-2 w-full border border-neutral-400 rounded-md"
+                                            error={
+                                                (!!errors.email ||
+                                                    !!serverErrors.email) &&
+                                                touched.email
+                                            }
                                             type="text"
                                             required
                                             value={values.email}
                                         />
                                         {errors.email && touched.email && (
-                                            <div className="text-red-500">
+                                            <Input.Error>
                                                 {errors.email}
-                                            </div>
+                                            </Input.Error>
                                         )}
                                         {serverErrors.email && (
-                                            <div className="text-red-500">
+                                            <Input.Error>
                                                 {serverErrors.email}
-                                            </div>
+                                            </Input.Error>
                                         )}
                                     </div>
                                     <div className="flex flex-col gap-1 w-full">
-                                        <label htmlFor="username">
-                                            Username{" "}
-                                            <span className="text-red-500">
-                                                *
-                                            </span>
-                                        </label>
-                                        <InputText
+                                        <Input.Label
+                                            size="lg"
+                                            required
+                                            htmlFor="username"
+                                        >
+                                            Username
+                                        </Input.Label>
+                                        <TextInput
                                             id="username"
                                             name="username"
                                             onChange={handleChange}
                                             autoComplete="off"
-                                            className="p-2 w-full border border-neutral-400 rounded-md"
                                             type="text"
+                                            error={
+                                                (!!errors.username ||
+                                                    !!serverErrors.username) &&
+                                                touched.username
+                                            }
                                             required
                                             value={values.username}
                                         />
                                         {errors.username &&
                                             touched.username && (
-                                                <div className="text-red-500">
+                                                <Input.Error>
                                                     {errors.username}
-                                                </div>
+                                                </Input.Error>
                                             )}
                                         {serverErrors.username && (
-                                            <div className="text-red-500">
+                                            <Input.Error>
                                                 {serverErrors.username}
-                                            </div>
+                                            </Input.Error>
                                         )}
                                     </div>
                                     <div className="flex flex-col gap-1 w-full">
-                                        <label htmlFor="displayName">
+                                        <Input.Label
+                                            size="lg"
+                                            htmlFor="displayName"
+                                        >
                                             Display Name
-                                        </label>
-                                        <InputText
+                                        </Input.Label>
+                                        <TextInput
                                             id="displayName"
                                             name="displayName"
                                             onChange={handleChange}
                                             autoComplete="off"
-                                            className="p-2 w-full border border-neutral-400 rounded-md"
+                                            error={
+                                                (!!errors.displayName ||
+                                                    !!serverErrors.displayName) &&
+                                                touched.displayName
+                                            }
                                             type="text"
+                                            value={values.displayName ?? ""}
                                         />
                                         {errors.displayName &&
                                             touched.displayName && (
-                                                <div className="text-red-500">
+                                                <Input.Error>
                                                     {errors.displayName}
-                                                </div>
+                                                </Input.Error>
                                             )}
                                         {serverErrors.displayName && (
-                                            <div className="text-red-500">
+                                            <Input.Error>
                                                 {serverErrors.displayName}
-                                            </div>
+                                            </Input.Error>
                                         )}
                                     </div>
                                     <div className="flex flex-col gap-1 w-full">
-                                        <label htmlFor="password">
-                                            Password{" "}
-                                            <span className="text-red-500">
-                                                *
-                                            </span>
-                                        </label>
-                                        <InputText
+                                        <Input.Label
+                                            size="lg"
+                                            required
+                                            htmlFor="password"
+                                        >
+                                            Password
+                                        </Input.Label>
+                                        <TextInput
                                             id="password"
                                             name="password"
                                             type="password"
+                                            error={
+                                                (!!errors.password ||
+                                                    !!serverErrors.password) &&
+                                                touched.password
+                                            }
                                             onChange={handleChange}
-                                            className="p-2 w-full border border-neutral-400 rounded-md"
                                             required
+                                            value={values.password}
                                         />
                                         {errors.password &&
                                             touched.password && (
-                                                <div className="text-red-500">
+                                                <Input.Error>
                                                     {errors.password}
-                                                </div>
+                                                </Input.Error>
                                             )}
                                         {serverErrors.password && (
-                                            <div className="text-red-500">
+                                            <Input.Error>
                                                 {serverErrors.password}
-                                            </div>
+                                            </Input.Error>
                                         )}
                                     </div>
                                     <div className="flex flex-col gap-1 w-full">
-                                        <label htmlFor="confirmPassword">
-                                            Confirm Password{" "}
-                                            <span className="text-red-500">
-                                                *
-                                            </span>
-                                        </label>
-                                        <InputText
+                                        <Input.Label
+                                            size="lg"
+                                            required
+                                            htmlFor="confirmPassword"
+                                        >
+                                            Confirm Password
+                                        </Input.Label>
+                                        <TextInput
                                             id="confirmPassword"
                                             name="confirmPassword"
                                             type="password"
+                                            error={
+                                                (!!errors.confirmPassword ||
+                                                    !!serverErrors.confirmPassword) &&
+                                                touched.confirmPassword
+                                            }
                                             onChange={handleChange}
-                                            className="p-2 w-full border border-neutral-400 rounded-md"
                                             required
+                                            value={values.confirmPassword}
                                         />
                                         {errors.confirmPassword &&
                                             touched.confirmPassword && (
-                                                <div className="text-red-500">
+                                                <Input.Error>
                                                     {errors.confirmPassword}
-                                                </div>
+                                                </Input.Error>
                                             )}
                                         {serverErrors.confirmPassword && (
-                                            <div className="text-red-500">
+                                            <Input.Error>
                                                 {serverErrors.confirmPassword}
-                                            </div>
+                                            </Input.Error>
                                         )}
                                     </div>
                                     <div className="flex flex-col gap-1 w-full">
-                                        <label htmlFor="dateOfBirth">
-                                            Date of Birth{" "}
-                                            <span className="text-red-500">
-                                                *
-                                            </span>
-                                        </label>
-                                        <InputMask
+                                        <Input.Label
+                                            size="lg"
+                                            required
+                                            htmlFor="dateOfBirth"
+                                        >
+                                            Date of Birth
+                                        </Input.Label>
+                                        <TextInput
                                             id="dateOfBirth"
                                             name="dateOfBirth"
+                                            error={
+                                                (!!errors.dateOfBirth ||
+                                                    !!serverErrors.dateOfBirth) &&
+                                                touched.dateOfBirth
+                                            }
                                             onChange={handleChange}
-                                            className="p-2 w-full border border-neutral-400 rounded-md"
-                                            mask="99/99/9999"
-                                            slotChar="dd/mm/yyyy"
-                                            placeholder="dd/mm/yyyy"
                                             value={values.dateOfBirth}
                                             required
                                         />
                                         {errors.dateOfBirth &&
                                             touched.dateOfBirth && (
-                                                <div className="text-red-500">
+                                                <Input.Error>
                                                     {errors.dateOfBirth}
-                                                </div>
+                                                </Input.Error>
                                             )}
                                         {serverErrors.dateOfBirth && (
-                                            <div className="text-red-500">
+                                            <Input.Error>
                                                 {serverErrors.dateOfBirth}
-                                            </div>
+                                            </Input.Error>
                                         )}
                                     </div>
                                     <div className="flex flex-col mt-2 gap-2">
                                         <Button
                                             type="submit"
-                                            label="Register"
-                                            severity="success"
-                                            className="w-full"
-                                        />
+                                            size="md"
+                                            color="green"
+                                        >
+                                            Register
+                                        </Button>
                                         <Button
                                             onClick={() => navigate("/login")}
-                                            label="Already have an account? Login"
-                                            severity="info"
-                                            link
-                                            className="w-full"
-                                        />
+                                            variant="transparent"
+                                        >
+                                            Already have an account? Login
+                                        </Button>
                                     </div>
                                 </div>
                             </Form>

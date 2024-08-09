@@ -23,7 +23,9 @@ import { store, persistor } from "../reducers";
 import App from "../App";
 import { AuthProvider } from "./AuthProvider";
 import { AppModeProvider } from "./AppModeProvider";
-import { PrimeReactProvider } from "primereact/api";
+import { ContextMenuProvider } from "mantine-contextmenu";
+import { createTheme, MantineProvider } from "@mantine/core";
+import { Notifications } from "@mantine/notifications";
 
 const { VITE_APP_URL, DEV } = import.meta.env;
 
@@ -87,7 +89,7 @@ const splitLink = split(
         );
     },
     wsLink,
-    httpLink
+    httpLink as any
 );
 
 const link = ApolloLink.from([retryLink, errorLink, authLink, splitLink]);
@@ -106,19 +108,26 @@ const client = new ApolloClient({
     }
 });
 
+const theme = createTheme({
+    fontFamily: "Montserrat, sans-serif"
+});
+
 export default function MainProvider() {
     return (
         <Provider store={store}>
             <PersistGate loading={null} persistor={persistor}>
                 <ApolloProvider client={client}>
                     <Router>
-                        <PrimeReactProvider>
-                            <AuthProvider>
-                                <AppModeProvider>
-                                    <App />
-                                </AppModeProvider>
-                            </AuthProvider>
-                        </PrimeReactProvider>
+                        <MantineProvider theme={theme} forceColorScheme="dark">
+                            <ContextMenuProvider>
+                                <AuthProvider>
+                                    <AppModeProvider>
+                                        <Notifications />
+                                        <App />
+                                    </AppModeProvider>
+                                </AuthProvider>
+                            </ContextMenuProvider>
+                        </MantineProvider>
                     </Router>
                 </ApolloProvider>
             </PersistGate>

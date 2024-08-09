@@ -1,11 +1,11 @@
-import { InputText } from "primereact/inputtext";
+import { TextInput } from "@mantine/core";
 
 const SearchBar = () => {
     return (
         <div className="flex items-center">
-            <InputText
+            <TextInput
                 placeholder="Search... (not functional yet) 🥲"
-                className="rounded-2xl shadow-lg w-96"
+                radius="xl"
             />
         </div>
     );

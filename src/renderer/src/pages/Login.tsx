@@ -4,11 +4,9 @@ import { useNavigate } from "react-router-dom";
 import { useMutation } from "@apollo/client";
 import { LoginUser } from "../gql/auth";
 
-import { Button } from "primereact/button";
-import { InputText } from "primereact/inputtext";
 import { LoginSchema } from "@renderer/ValidationSchemas";
 import { Form, Formik } from "formik";
-import { Password } from "primereact/password";
+import { Button, Input, TextInput } from "@mantine/core";
 
 const LoginPage = () => {
     const navigate = useNavigate();
@@ -34,7 +32,7 @@ const LoginPage = () => {
 
     return (
         <div className="flex flex-col justify-center items-center h-screen">
-            <div className="flex flex-col justify-center p-10 items-center w-[500px] rounded-xl bg-neutral-700/[0.05]">
+            <div className="flex flex-col justify-center p-10 items-center w-[500px] rounded-xl bg-neutral-700/[0.05] border border-blue-500/60">
                 <div className="flex text-xl">
                     <span>Login to&nbsp;</span>
                     <span className="font-bold">Fluffer</span>
@@ -52,18 +50,19 @@ const LoginPage = () => {
                             <Form className="w-full">
                                 <div className="flex flex-col justify-center items-center pt-8 px-8 py-4 gap-2 w-full">
                                     <div className="flex flex-col gap-1 w-full">
-                                        <label htmlFor="usernameOrEmail">
-                                            Username or Email{" "}
-                                            <span className="text-red-500">
-                                                *
-                                            </span>
-                                        </label>
-                                        <InputText
+                                        <Input.Label
+                                            required
+                                            size="md"
+                                            htmlFor="usernameOrEmail"
+                                        >
+                                            Username or Email
+                                        </Input.Label>
+                                        <TextInput
                                             id="usernameOrEmail"
                                             name="usernameOrEmail"
                                             onChange={handleChange}
                                             autoComplete="off"
-                                            invalid={
+                                            error={
                                                 !!errors.usernameOrEmail &&
                                                 touched.usernameOrEmail
                                             }
@@ -72,25 +71,25 @@ const LoginPage = () => {
                                             type="text"
                                         />
                                         {errors.usernameOrEmail && (
-                                            <small className="text-red-500 text-xs">
+                                            <Input.Error>
                                                 {errors.usernameOrEmail}
-                                            </small>
+                                            </Input.Error>
                                         )}
                                     </div>
                                     <div className="flex flex-col gap-1 w-full">
-                                        <label htmlFor="password">
-                                            Password{" "}
-                                            <span className="text-red-500">
-                                                *
-                                            </span>
-                                        </label>
-                                        <InputText
+                                        <Input.Label
+                                            required
+                                            htmlFor="password"
+                                            size="md"
+                                        >
+                                            Password
+                                        </Input.Label>
+                                        <TextInput
                                             id="password"
                                             name="password"
-                                            toggleMask
                                             type="password"
                                             onChange={handleChange}
-                                            invalid={
+                                            error={
                                                 (!!errors.password &&
                                                     touched.password) ||
                                                 unsuccesful
@@ -99,30 +98,32 @@ const LoginPage = () => {
                                             required
                                         />
                                         {errors.password && (
-                                            <small className="text-red-500 text-xs">
+                                            <Input.Error>
                                                 {errors.password}
-                                            </small>
+                                            </Input.Error>
                                         )}
                                         {unsuccesful && (
-                                            <small className="text-red-500 text-xs">
+                                            <Input.Error>
                                                 Invalid username or password
-                                            </small>
+                                            </Input.Error>
                                         )}
                                     </div>
                                     <div className="flex flex-col mt-2 gap-2">
                                         <Button
+                                            size="md"
+                                            color="green"
                                             type="submit"
-                                            label="Login"
-                                            severity="success"
-                                            className="w-full"
-                                        />
+                                        >
+                                            Login
+                                        </Button>
                                         <Button
-                                            link
+                                            variant="transparent"
                                             onClick={() =>
                                                 navigate("/register")
                                             }
-                                            label="Don't have an account? Register"
-                                        />
+                                        >
+                                            Don't have an account? Register
+                                        </Button>
                                     </div>
                                 </div>
                                 <div className="flex flex-col justify-center"></div>

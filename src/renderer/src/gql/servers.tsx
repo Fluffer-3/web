@@ -11,6 +11,23 @@ export const CreateServer = gql`
     }
 `;
 
+export const JoinServer = gql`
+    mutation joinServer($code: String!) {
+        joinServer(code: $code) {
+            id
+            name
+            nameAcronym
+            icon
+        }
+    }
+`;
+
+export const LeaveServer = gql`
+    mutation leaveServer($id: String!) {
+        leaveServer(id: $id)
+    }
+`;
+
 export const GetUserServers = gql`
     query getUserServers($id: String) {
         getUserServers(id: $id) {
@@ -25,6 +42,12 @@ export const GetUserServers = gql`
     }
 `;
 
+export const CheckServerAccess = gql`
+    query checkServerAccess($id: String!) {
+        checkServerAccess(id: $id)
+    }
+`;
+
 export const GetServerSidebarInfo = gql`
     query getServerSidebarInfo($id: String!) {
         getServer(id: $id) {
@@ -32,6 +55,28 @@ export const GetServerSidebarInfo = gql`
             name
             nameAcronym
             icon
+            owner {
+                id
+            }
+        }
+    }
+`;
+
+export const GetServerInvites = gql`
+    query getServerInvites($id: String!) {
+        getServerSettings(id: $id) {
+            invites {
+                code
+                uses
+                maxUses
+                createdBy {
+                    id
+                    username
+                    displayName
+                }
+                expiresAt
+                createdAt
+            }
         }
     }
 `;
@@ -43,6 +88,23 @@ export const OnServerCreated = gql`
             name
             nameAcronym
             icon
+            owner {
+                id
+            }
+        }
+    }
+`;
+
+export const OnServerJoined = gql`
+    subscription serverJoined {
+        serverJoined {
+            id
+            name
+            nameAcronym
+            icon
+            owner {
+                id
+            }
         }
     }
 `;

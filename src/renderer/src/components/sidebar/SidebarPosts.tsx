@@ -23,7 +23,7 @@ const SidebarPosts = () => {
             username: "lolee"
         },
         {
-            id: "3",
+            id: "4",
             username: "hehehaha",
             globalName: "Hehe Haha"
         }

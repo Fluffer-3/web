@@ -1,16 +1,10 @@
-@layer tailwind-base, primereact, tailwind-utilities;
+@layer mantine, matine-contextmenu;
 
-/* IMPORTANT: In "styled" mode you must add the PrimeReact Theme here. Do NOT include in "unstyled" mode */
-@import "primereact/resources/themes/viva-dark/theme.css" layer(primereact);
-
-@layer tailwind-base {
+@layer tailwind {
     @tailwind base;
 }
-
-@layer tailwind-utilities {
-    @tailwind components;
-    @tailwind utilities;
-}
+@tailwind components;
+@tailwind utilities;
 
 * {
     min-width: 0;

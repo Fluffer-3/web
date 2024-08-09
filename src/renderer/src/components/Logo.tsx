@@ -1,8 +1,7 @@
-import { Avatar } from "primereact/avatar";
-import { PropsWithChildren } from "react";
+import { Avatar } from "@mantine/core";
 
-const Logo = (props: PropsWithChildren) => {
-    return <Avatar className="bg-transparent" image="/logo.png" {...props} />;
+const Logo = () => {
+    return <Avatar src="/logo.png" />;
 };
 
 export default Logo;

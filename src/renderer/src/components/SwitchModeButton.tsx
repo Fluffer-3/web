@@ -1,7 +1,6 @@
+import { Avatar, Tooltip } from "@mantine/core";
 import { useAppMode } from "@renderer/hooks";
-import { Avatar } from "primereact/avatar";
-import { Tooltip } from "primereact/tooltip";
-import { classNames } from "primereact/utils";
+import classNames from "classnames";
 
 const SwitchModeButton = () => {
     const { appMode, changeAppMode } = useAppMode();
@@ -9,25 +8,30 @@ const SwitchModeButton = () => {
     return (
         <>
             <Tooltip
-                target=".switch-mode-button"
-                content={`Switch to ${appMode === "servers" ? "Posts" : "Servers"}`}
-                position="mouse"
-                event="both"
-                mouseTrack
-            />
-            <Avatar
-                shape="circle"
-                label={appMode === "servers" ? "Servers" : "Posts"}
-                className={classNames(
-                    "w-16 h-16 bg-neutral-700/[.9] cursor-pointer switch-mode-button",
-                    appMode === "servers"
-                        ? "border-2 border-green-500"
-                        : "border-2 border-blue-500"
-                )}
-                onClick={() =>
-                    changeAppMode(appMode === "servers" ? "posts" : "servers")
-                }
-            />
+                position="right"
+                color="gray"
+                label={`Switch to ${appMode === "servers" ? "Posts" : "Servers"}`}
+            >
+                <Avatar
+                    variant="filled"
+                    className={classNames(
+                        "cursor-pointer",
+                        appMode === "servers"
+                            ? "border-2 border-green-500/60"
+                            : "border-2 border-blue-500/60"
+                    )}
+                    onClick={() =>
+                        changeAppMode(
+                            appMode === "servers" ? "posts" : "servers"
+                        )
+                    }
+                    size={64}
+                >
+                    <span className="text-sm">
+                        {appMode === "servers" ? "Servers" : "Posts"}
+                    </span>
+                </Avatar>
+            </Tooltip>
         </>
     );
 };

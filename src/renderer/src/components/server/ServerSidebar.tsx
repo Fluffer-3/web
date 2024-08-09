@@ -18,8 +18,8 @@ const ServerSidebar = () => {
     if (!server) return <></>;
 
     return (
-        <div className="flex flex-col items-center h-screen border-r w-60 border-r-green-500 bg-neutral-700/[.2]">
-            <div className="flex h-[4.3rem] shadow-2xl bg-neutral-800 border-b border-b-green-500 px-3 py-2 w-full">
+        <div className="flex flex-col items-center h-screen border-r w-60 border-r-green-500/60 bg-neutral-700/[.2]">
+            <div className="flex h-[4.3rem] shadow-2xl bg-neutral-800 border-b border-b-green-500/60 px-3 py-2 w-full">
                 <span className="text-neutral-200 text-lg truncate">
                     {server.name}
                 </span>
